@@ -11,6 +11,7 @@ export async function up(knex: Knex): Promise<void> {
       .inTable('report')
       .notNullable();
     table.integer('quantity').checkPositive().notNullable();
+    table.integer('min_quantity').checkPositive().notNullable();
     table.string('category').references('category').inTable('report');
   });
 }
