@@ -10,6 +10,9 @@ const config: Knex.Config = {
   migrations: {
     tableName: 'knex_migrations',
     directory: './src/database'
+  },
+  seeds: {
+    directory: './src/seeds'
   }
 };
 
