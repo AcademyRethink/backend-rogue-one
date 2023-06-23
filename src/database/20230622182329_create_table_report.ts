@@ -3,6 +3,7 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("report", function (table) {
         table.increments("report_id").primary();
+        table.string("cnpj").notNullable();
         table.foreign("cnpj").references("pharmacy.cnpj");
         table.string("molecule").notNullable();
         table.string("laboratory").notNullable();
