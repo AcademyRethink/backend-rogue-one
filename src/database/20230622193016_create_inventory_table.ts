@@ -5,14 +5,10 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id').primary();
     table.string('cnpj').references('cnpj').inTable('pharmacy');
     table.string('product_name').notNullable();
-    table
-      .integer('product_id')
-      .references('product_id')
-      .inTable('report')
-      .notNullable();
+    table.string('ean').notNullable();
     table.integer('quantity').checkPositive().notNullable();
     table.integer('min_quantity').checkPositive().notNullable();
-    table.string('category').references('category').inTable('report');
+    table.string('category').notNullable();
   });
 }
 

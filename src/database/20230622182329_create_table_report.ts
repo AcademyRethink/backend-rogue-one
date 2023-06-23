@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
         table.foreign("cnpj").references("pharmacy.cnpj");
         table.string("molecule").notNullable();
         table.string("laboratory").notNullable();
-        table.integer("product_id").notNullable();
+        table.string("ean").notNullable();
         table.string("product_name").notNullable();
         table.string("category").notNullable();
         table.float("sale_pharmacy_month").notNullable();
