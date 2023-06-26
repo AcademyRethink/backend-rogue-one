@@ -39,7 +39,7 @@ const formatNumber = (text: string) => {
 export async function seed(knex: Knex): Promise<void> {
   const cnpj = '00111222000133';
   const date = new Date('2023-03-01T00:00:00');
-  const reportData: FormatedProduct[] = await fetch(
+  const reportData = await fetch(
     'https://v1.nocodeapi.com/delmo/google_sheets/qyqtfgOGTShTYIqq?tabId=report'
   )
     .then((res) => res.json())
@@ -53,14 +53,8 @@ export async function seed(knex: Knex): Promise<void> {
           molecule: product.molecule,
           laboratory: product.laboratory,
           product_name: product.product_name,
-          sale_competitors_month:
-            formatNumber(product.sale_competitors_month) !== 0
-              ? formatNumber(product.sale_competitors_month) + 2
-              : 0,
-          sale_pharmacy_month:
-            formatNumber(product.sale_pharmacy_month) !== 0
-              ? formatNumber(product.sale_pharmacy_month) + 4
-              : 0,
+          sale_competitors_month: formatNumber(product.sale_competitors_month),
+          sale_pharmacy_month: formatNumber(product.sale_pharmacy_month),
           month_year: date
         };
       })
@@ -69,5 +63,3 @@ export async function seed(knex: Knex): Promise<void> {
   // Inserts seed entries
   await knex.batchInsert('report', reportData);
 }
-
-seed(knexInstance);
