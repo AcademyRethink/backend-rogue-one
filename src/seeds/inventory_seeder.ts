@@ -19,7 +19,7 @@ function randomizeNumber(value: number) {
 
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
-  await knex('inventory').del();
+  await knex('inventory').truncate();
 
   const cnpjs: string[] = (await knex('report').select('cnpj')).map(
     ({ cnpj }) => cnpj
@@ -40,13 +40,17 @@ export async function seed(knex: Knex): Promise<void> {
       );
       const min_quantity = Math.ceil(0.6 * quantity);
 
+      if (!(min_quantity - quantity)) {
+        continue;
+      }
+
       await knex('inventory').insert({
         cnpj: uniqueCnpjs[i],
         category,
         ean,
         product_name,
-        quantity: quantity || 1,
-        min_quantity: min_quantity || 1
+        quantity: min_quantity - quantity ? quantity : quantity + 1,
+        min_quantity
       });
     }
   }
