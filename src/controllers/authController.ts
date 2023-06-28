@@ -27,8 +27,12 @@ export async function signUp(req: Request, res: Response): Promise<void> {
 
 export async function forgotPassword(req: Request, res: Response) {
   try {
+   
     // Lógica para redefinir a senha do usuário
     const { email } = req.body;
+    if (!email) {
+      throw new Error('Email é obrigatório');
+    }
 
     // Envio do e-mail de redefinição de senha
     await authService.sendPasswordResetEmail(email);
@@ -50,15 +54,19 @@ export async function resetPassword(req: Request, res: Response) {
     // Lógica para redefinir a senha do usuário
     const { token } = req.query;
     const { password } = req.body;
-
+     if (!password) {
+      throw new Error('Senha é obrigatória');
+    } 
     if (token) {
       // Verificando e decodificando o token para obter o email do usuário
       const decoded = jwt.verify(
         `${token}`,
         `${process.env.SECRET_KEY}`
       ) as JwtPayload;
+      
 
       const email = decoded.userId;
+
 
       // Envio do e-mail de redefinição de senha
       await authService.resetPassword(email, password);
@@ -72,6 +80,7 @@ export async function resetPassword(req: Request, res: Response) {
     res.status(500).json({
       message:
         (error as Error).message || 'Ocorreu um erro ao redefinir a senha'
+        
     });
   }
 }

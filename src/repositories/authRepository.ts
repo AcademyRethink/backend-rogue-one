@@ -1,4 +1,5 @@
 import knex from 'knex';
+import { User } from '../types/auth';
 
 const db = knex({
   client: 'pg',
@@ -16,15 +17,8 @@ async function findUserByEmail(email: string): Promise<User | undefined> {
     const user = await db('pharmacy').where('email', email).first();
     return user;
   } catch (error) {
-    throw new Error('Error fetching user by email');
+    throw new Error('Erro ao buscar email');
   }
-}
-interface User {
-  token: User | undefined;
-  cnpj: string;
-  email: string;
-  password: string;
-  has_access: boolean;
 }
 
 async function createUser(
@@ -41,7 +35,7 @@ async function createUser(
     });
     return user;
   } catch (error) {
-    throw new Error('Error creating user');
+    throw new Error('Erro ao criar usuário');
   }
 }
 
@@ -53,7 +47,7 @@ async function updateUser(email: string, token: string): Promise<void> {
       })
       .where({ email });
   } catch (error) {
-    throw new Error('Error updating user');
+    throw new Error('Erro ao criar usuário');
   }
 }
 
@@ -69,8 +63,8 @@ async function updateUserPassword(
       })
       .where({ email });
   } catch (error) {
-    throw new Error('Error updating user');
+    throw new Error('Erro ao atualizar senha');
   }
 }
 
-export default { findUserByEmail, createUser, updateUser,updateUserPassword };
+export default { findUserByEmail, createUser, updateUser, updateUserPassword };

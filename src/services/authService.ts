@@ -2,11 +2,20 @@ import authRepository from '../repositories/authRepository';
 import { validateUser, generatePassword } from '../utils/passwordHash';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 export async function login(email: string, password: string) {
+  if (!email || !password) {
+    throw new Error('Email e senha são obrigatórios');
+  }
   const user = await authRepository.findUserByEmail(email);
+
+  if (!user) {
+    throw new Error('Email inválido');
+  }
+
+  if (!user.has_access) {
+    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento');
+  }
 
   if (user) {
     const isValid = await validateUser(password, user.password);
@@ -22,9 +31,8 @@ export async function login(email: string, password: string) {
         }
       );
       return token;
-    }
-    else{
-      throw new Error('Invalid password')
+    } else {
+      throw new Error('Senha inválida');
     }
   }
 }
@@ -57,16 +65,15 @@ export async function resetPassword(email: string, password: string) {
 
       return updatedUser;
     }
-  }
-  else{
-    throw new Error('Reset password expired')
+  } else {
+    throw new Error('Link de redefinição de senha expirado');
   }
 }
 
 export async function sendPasswordResetEmail(email: string) {
   try {
     // Gerando um novo token
-    const token = jwt.sign({ userId: email }, String(process.env.SECRET_KEYS), {
+    const token = jwt.sign({ userId: email }, String(process.env.SECRET_KEY), {
       expiresIn: '1h'
     });
 
@@ -77,21 +84,19 @@ export async function sendPasswordResetEmail(email: string) {
       service: 'gmail',
       auth: {
         user: String(process.env.USER),
-        pass: String(process.env.PASS)
+        pass: String(process.env.PASS) 
       }
     });
-
     const urlResetPassword = `https://pharmacy-rogueone.com.br/auth/reset-password?token=${token}`;
 
     await transporter.sendMail({
       from: String(process.env.USER),
       to: email,
       subject: 'Redefinição de Senha',
-      html: `Olá! Clique no link abaixo para redefinir sua senha.<br> <a href=${urlResetPassword}>Recupere a sua senha<a>`
+      html: `<h3>Olá! Clique no link abaixo para redefinir sua senha:<h3><br> <a href=${urlResetPassword}>Recupere a sua senha<a>`
     });
     console.log('E-mail de redefinição de senha enviado para:', email);
   } catch (error) {
-    console.error('Erro ao enviar o e-mail de redefinição de senha:', error);
     throw new Error('Erro ao enviar o e-mail de redefinição de senha');
   }
 }

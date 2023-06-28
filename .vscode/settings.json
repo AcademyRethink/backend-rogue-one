@@ -1,7 +1,3 @@
 {
-    "cSpell.words": [
-        "cnpj",
-        "postgres",
-        "supabase"
-    ]
+  "cSpell.words": ["cnpj", "middlewares", "postgres", "supabase"]
 }
