@@ -7,11 +7,9 @@ export async function generatePassword(
 ): Promise<string | undefined> {
   try {
     const passwordHash = await bcrypt.hash(password, saltRounds);
-
-    console.log('Hash generated', passwordHash);
     return passwordHash;
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error ) {
+    console.error((error as Error).message);
   }
 }
 
@@ -20,12 +18,9 @@ export async function validateUser(
   hash: string
 ): Promise<boolean | undefined> {
   try {
-    console.log(password, 'password');
-    console.log(hash, 'hash');
     const isValid = await bcrypt.compare(password, hash);
-    console.log(isValid, 'isValid');
     return isValid;
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error((error as Error).message);
   }
 }

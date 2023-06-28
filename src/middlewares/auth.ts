@@ -19,6 +19,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     (req as CustomRequest).token = decoded;
 
     next();
+
   } catch (err) {
     res.status(401).send('Please authenticate');
   }
