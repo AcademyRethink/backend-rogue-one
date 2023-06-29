@@ -1,5 +1,5 @@
 interface User {
-  token: User | undefined;
+  token: string | null;
   cnpj: string;
   email: string;
   password: string;

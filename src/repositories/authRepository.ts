@@ -1,5 +1,5 @@
 import knex from 'knex';
-import { User } from '../types/auth';
+import { User } from '../types/authType';
 
 const db = knex({
   client: 'pg',
@@ -12,7 +12,7 @@ const db = knex({
   }
 });
 
-async function findUserByEmail(email: string): Promise<User | undefined> {
+export async function findUserByEmail(email: string): Promise<User | undefined> {
   try {
     const user = await db('pharmacy').where('email', email).first();
     return user;
@@ -21,7 +21,7 @@ async function findUserByEmail(email: string): Promise<User | undefined> {
   }
 }
 
-async function createUser(
+export async function createUser(
   cnpj: string,
   email: string,
   password: string
@@ -39,7 +39,7 @@ async function createUser(
   }
 }
 
-async function updateUser(email: string, token: string): Promise<void> {
+export async function updateUser(email: string, token: string): Promise<void> {
   try {
     await db('pharmacy')
       .update({
@@ -51,7 +51,7 @@ async function updateUser(email: string, token: string): Promise<void> {
   }
 }
 
-async function updateUserPassword(
+export async function updateUserPassword(
   email: string,
   password: string
 ): Promise<void> {

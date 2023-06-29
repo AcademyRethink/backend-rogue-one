@@ -1,5 +1,5 @@
 import authRepository from '../repositories/authRepository';
-import { validateUser, generatePassword } from '../utils/passwordHash';
+import passwordHash from '../utils/passwordHash';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
@@ -7,7 +7,7 @@ export async function login(email: string, password: string) {
   if (!email || !password) {
     throw new Error('Email e senha são obrigatórios');
   }
-  const user = await authRepository.findUserByEmail(email);
+  const user = await authRepository.findUserByEmail(email)
 
   if (!user) {
     throw new Error('Email inválido');
@@ -18,7 +18,7 @@ export async function login(email: string, password: string) {
   }
 
   if (user) {
-    const isValid = await validateUser(password, user.password);
+    const isValid = await passwordHash.validateUser(password, user.password);
 
     if (isValid) {
       // generate token
@@ -30,6 +30,7 @@ export async function login(email: string, password: string) {
           expiresIn: '10h'
         }
       );
+      console.log(token)
       return token;
     } else {
       throw new Error('Senha inválida');
@@ -41,10 +42,10 @@ export async function signUp(cnpj: string, email: string, password: string) {
   const user = await authRepository.findUserByEmail(email);
 
   if (!user) {
-    const passwordHash = await generatePassword(password);
+    const passwordHashed = await passwordHash.generatePassword(password);
 
-    if (passwordHash) {
-      const newUser = authRepository.createUser(cnpj, email, passwordHash);
+    if (passwordHashed) {
+      const newUser = authRepository.createUser(cnpj, email, passwordHashed);
 
       return newUser;
     }
@@ -55,12 +56,12 @@ export async function resetPassword(email: string, password: string) {
   const user = await authRepository.findUserByEmail(email);
 
   if (user && user.token) {
-    const passwordHash = await generatePassword(password);
+    const passwordHashed = await passwordHash.generatePassword(password);
 
-    if (passwordHash) {
+    if (passwordHashed) {
       const updatedUser = authRepository.updateUserPassword(
         email,
-        passwordHash
+        passwordHashed
       );
 
       return updatedUser;

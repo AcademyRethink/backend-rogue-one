@@ -1,8 +1,7 @@
 import bcrypt from 'bcrypt';
 
 const saltRounds = 10;
-
-export async function generatePassword(
+async function generatePassword(
   password: string
 ): Promise<string | undefined> {
   try {
@@ -12,8 +11,7 @@ export async function generatePassword(
     console.error((error as Error).message);
   }
 }
-
-export async function validateUser(
+async function validateUser(
   password: string,
   hash: string
 ): Promise<boolean | undefined> {
@@ -23,4 +21,8 @@ export async function validateUser(
   } catch (error) {
     console.error((error as Error).message);
   }
+}
+
+export default {
+validateUser, generatePassword
 }
