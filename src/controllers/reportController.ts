@@ -1,9 +1,16 @@
 import { Response, Request } from 'express';
 import reportService from '../services/reportService';
 
-const selectAllProductsFromController = async (req: Request, res: Response) => {
+const selectProductsFromController = async (req: Request, res: Response) => {
   try {
-    const productsMap = await reportService.selectAllProductsFromService();
+    const { limit, orderSort, orderField, category, period } = req.query;
+    const productsMap = await reportService.selectProductsFromService({
+      limit: limit?.toString(),
+      orderSort: orderSort?.toString(),
+      orderField: orderField?.toString(),
+      category: category?.toString(),
+      period: period?.toString()
+    });
 
     res.status(200).json(productsMap);
   } catch (error: unknown) {
@@ -11,4 +18,4 @@ const selectAllProductsFromController = async (req: Request, res: Response) => {
   }
 };
 
-export default { selectAllProductsFromController };
+export default { selectProductsFromController };
