@@ -1,16 +1,8 @@
 import knex from 'knex';
 import { User } from '../types/authType';
+import config from '../../knexfile';
 
-const db = knex({
-  client: 'pg',
-  connection: {
-    host: 'db.izvxtownguxnlolhpaoe.supabase.co',
-    user: 'postgres',
-    password: String(process.env.DATABASE_PASSWORD),
-    database: 'postgres',
-    port: 5432
-  }
-});
+const db = knex(config)
 
 export async function findUserByEmail(email: string): Promise<User | undefined> {
   try {

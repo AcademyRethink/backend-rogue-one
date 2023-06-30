@@ -25,7 +25,7 @@ export async function login(email: string, password: string) {
 
       const token = jwt.sign(
         { userId: user.cnpj },
-        String(process.env.SECRET_KEYS),
+        String(process.env.SECRET_KEY),
         {
           expiresIn: '10h'
         }
