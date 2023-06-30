@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { router as reportRouter } from './reportRoutes';
+import { report as reportRouter } from './reportRoutes';
+import { laboratories as laboratoriesRouter } from './reportRoutes';
 
 const router = Router();
 

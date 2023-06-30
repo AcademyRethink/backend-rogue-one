@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import reportController from '../controllers/reportController';
 
-const router: Router = Router();
+const report: Router = Router();
+const laboratories: Router = Router();
 
-router.get('/', reportController.selectProductsFromController);
+report.get('/', reportController.selectProductsFromController);
+report.get(
+  '/laboratories',
+  reportController.selectLaboratoryByProductFromController
+);
 
-export { router };
+export { report, laboratories };
