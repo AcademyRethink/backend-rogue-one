@@ -6,7 +6,7 @@ const db = knex({
   connection: {
     host: 'db.izvxtownguxnlolhpaoe.supabase.co',
     user: 'postgres',
-    password: 'F5!$@wAGp@@6kHf',
+    password: String(process.env.DATABASE_PASSWORD),
     database: 'postgres',
     port: 5432
   }

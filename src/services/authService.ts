@@ -30,7 +30,6 @@ export async function login(email: string, password: string) {
           expiresIn: '10h'
         }
       );
-      console.log(token)
       return token;
     } else {
       throw new Error('Senha inválida');
@@ -96,7 +95,7 @@ export async function sendPasswordResetEmail(email: string) {
       subject: 'Redefinição de Senha',
       html: `<h3>Olá! Clique no link abaixo para redefinir sua senha:<h3><br> <a href=${urlResetPassword}>Recupere a sua senha<a>`
     });
-    console.log('E-mail de redefinição de senha enviado para:', email);
+  
   } catch (error) {
     throw new Error('Erro ao enviar o e-mail de redefinição de senha');
   }
