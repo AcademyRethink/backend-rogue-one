@@ -16,7 +16,7 @@ const selectProductsFromService = async ({
     orderField: orderField,
     orderSort: orderSort
   });
-  const limitAsNumber = typeof limit === 'string' ? parseInt(limit) : 100;
+  const limitAsNumber = parseInt(limit);
   return await reportRepository.selectProductsFromRepository(
     whereQuery,
     orderQuery,

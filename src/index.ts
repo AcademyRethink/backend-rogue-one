@@ -6,7 +6,7 @@ const app: Application = express();
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('to aqui');
+  res.send('FARMView Application API');
 });
 
 // Definindo rotas "privadas"
