@@ -1,4 +1,3 @@
-
 import { router as reportRouter } from './reportRoutes';
 import { router as categoriesRoutes } from './categories';
 
@@ -16,3 +15,4 @@ dashboardRoute.post('/home', (req, res) => {
 
 
 export { dashboardRoute };
+
