@@ -7,6 +7,8 @@ const orderSort = 'DESC';
 const orderField = 'sale_competitors_month';
 const category = 'MIP_MARCA';
 const period = '2023-02-01';
+const molecule = 'DIPIRONA SODICA';
+const product_name = 'DIPIRONA SODICA MG GOTAS 500MG 20ML x 1 /ML';
 
 const productListMock = [
   {
@@ -103,5 +105,19 @@ describe('selectProductsFromService', () => {
     } catch (error) {
       expect(error).toBeDefined();
     }
+  });
+});
+
+describe('selectLaboratoryByProductFromService', () => {
+  it('should return an array with length <= to 5', async () => {
+    const result = await reportService.selectLaboratoryByProductFromService({
+      limit,
+      category,
+      period,
+      molecule,
+      product_name
+    });
+
+    expect(result.length).toBeLessThanOrEqual(5);
   });
 });

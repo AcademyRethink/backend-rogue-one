@@ -57,11 +57,20 @@ const selectLaboratoryByProductFromService = async ({
         period,
         molecule
       });
+    
   const limitAsNumber = parseInt(limit);
-  return await reportRepository.selectLaboratoryByProductFromRepository({
-    limit: limitAsNumber,
-    whereQuery: whereQuery
-  });
+
+  const result = await reportRepository.selectLaboratoryByProductFromRepository(
+    {
+      limit: limitAsNumber,
+      whereQuery: whereQuery
+    }
+  );
+
+  if (result.length === 0) {
+    throw new Error('Produto não encontrado');
+  }
+  return result;
 };
 
 export default {
