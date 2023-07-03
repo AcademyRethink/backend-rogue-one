@@ -1,12 +1,18 @@
-import { Router } from 'express';
+
 import { router as reportRouter } from './reportRoutes';
+import { router as categoriesRoutes } from './categories';
 
-const router = Router();
+import { Router } from 'express';
 
-router.post('/home', (req, res) => {
+const dashboardRoute: Router = Router();
+
+dashboardRoute.use('/categories', categoriesRoutes);
+
+dashboardRoute.use('/report', reportRouter);
+
+dashboardRoute.post('/home', (req, res) => {
   return res.json({ ok: true });
 });
 
-router.use('/report', reportRouter);
 
-export default router;
+export { dashboardRoute };
