@@ -1,18 +1,25 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
+import authRoutes from './routes/authRoute';
 import dashboardRoute from './routes/dashboardRoute';
+import { auth } from './middlewares/auth';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
+
+
+// Crie uma instância do aplicativo Express
 const app: Application = express();
 
 app.use(express.json());
+// Defina as rotas
+app.use('/auth', authRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('to aqui');
-});
+// Definindo middleware de verificação/validação do token
+app.use(auth);
 
 // Definindo rotas "privadas"
 app.use('/dashboard', dashboardRoute);
 
-// Inicie o servidor
 app.listen(3050, () => {
-  console.log('Servidor rodando na porta 3050');
-});
+  console.log('Server listening on port 3050');
+
