@@ -22,4 +22,4 @@ app.use('/dashboard', dashboardRoute);
 
 app.listen(3050, () => {
   console.log('Server listening on port 3050');
-});
+
