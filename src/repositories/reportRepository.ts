@@ -3,17 +3,27 @@ import config from '../../knexfile';
 
 const knexInstance = knex(config);
 
-const whereConstructor = ({category, period}: {category: string, period: string}) => {
+const whereConstructor = ({
+  category,
+  period
+}: {
+  category: string;
+  period: string;
+}) => {
   const whereQuery = [];
   if (category) whereQuery.push(`category = '${category}'`);
   if (period) whereQuery.push(`month_year = '${period}'`);
-  return whereQuery.join(' AND ');
+  const query: string = whereQuery.join(' AND ');
+  return query;
 };
 
 const orderConstructor = ({
   orderField,
   orderSort
-}: {orderField: string, orderSort: string}) => {
+}: {
+  orderField: string;
+  orderSort: string;
+}) => {
   return `${orderField} ${orderSort}`;
 };
 
