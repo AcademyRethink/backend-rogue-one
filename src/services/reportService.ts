@@ -8,20 +8,31 @@ const selectProductsFromService = async ({
   period = ''
 }) => {
   const whereQuery = reportRepository.whereConstructor({
-    category: category,
-    period: period
+    category,
+    period
   });
+  if (!whereQuery) {
+    throw new Error('Insira um filtro para realizar a busca');
+  }
 
   const orderQuery = reportRepository.orderConstructor({
     orderField: orderField,
     orderSort: orderSort
   });
+
   const limitAsNumber = parseInt(limit);
-  return await reportRepository.selectProductsFromRepository(
+
+  const productsMap = await reportRepository.selectProductsFromRepository(
     whereQuery,
     orderQuery,
     limitAsNumber
   );
+
+  if (productsMap.length === 0) {
+    throw new Error('Produto não encontrado');
+  }
+
+  return productsMap;
 };
 
 const selectLaboratoryByProductFromService = async ({
