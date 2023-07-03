@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from 'express';
-import { router } from './routes';
+import { dashboardRoute } from './routes/dashboardRoute';
 
 const app: Application = express();
 
@@ -9,11 +9,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('to aqui');
 });
 
-app.use('/', router);
 // Definindo rotas "privadas"
-// app.use('/dashboard', dashboardRoute);
+app.use('/dashboard', dashboardRoute);
 
-// Inicie o servidor
 app.listen(3050, () => {
   console.log('Servidor rodando na porta 3050');
 });
