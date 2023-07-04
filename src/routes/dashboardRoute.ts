@@ -1,4 +1,4 @@
-import { router as reportRouter } from './reportRoutes';
+import { report as reportRouter } from './reportRoutes';
 import { router as categoriesRoutes } from './categories';
 
 import { Router } from 'express';
