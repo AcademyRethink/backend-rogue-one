@@ -12,7 +12,7 @@ describe('category test', () => {
     const result = await categoryService.getAll();
     expect(result.length).not.toBeLessThanOrEqual(0);
   });
-  it('should return an error if array is undefined', async () => {
+  it('should return a defined result', async () => {
     const result = await categoryService.getAll();
     expect(typeof result.length).not.toBe('undefined');
   });
