@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 // Definindo middleware de verificação/validação do token
-// app.use(auth);
+app.use(auth);
 
 // Definindo rotas "privadas"
 app.use('/dashboard', dashboardRoute);
