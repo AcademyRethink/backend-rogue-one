@@ -108,15 +108,22 @@ const selectInventory = async (
  * @param {string} [product_name] - String containg the products name (case insensitive).
  * @returns {string[]}
  */
-const selectProducts = async (cnpj: string, product_name?: string) => {
+const selectProducts = async (
+  cnpj: string,
+  product_name?: string,
+  category?: string
+) => {
+  if (!validateCNPJ(cnpj)) throw new Error('Invalid CNPJ');
+
   return await knexInstance('inventory')
     .distinct('product_name')
     .where({ cnpj })
-    .modify((query) =>
-      product_name
+    .modify((query) => {
+      query = product_name
         ? query.whereILike('product_name', `%${product_name}%`)
-        : query
-    )
+        : query;
+      query = category ? query.whereILike('category', `%${category}%`) : query;
+    })
     .pluck('product_name');
 };
 

@@ -8,3 +8,4 @@ export type InventoryRecord = {
     category: string,
     date: Date     
 }
+

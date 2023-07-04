@@ -10,9 +10,24 @@ const selectInventory = async (request: Request, response: Response) => {
       limit,
       options
     );
-
+      
     response.status(200).json(inventoryData);
   } catch (error: unknown) {
+    response.json(error);
+  }
+};
+
+const selectProducts = async (request: Request, response: Response) => {
+  try {
+    const { cnpj, product_name, category } = request.body;
+
+    const data = await inventoryServices.selectProducts(
+      cnpj,
+      product_name,
+      category
+    );
+    response.status(200).json(data);
+  } catch (error) {
     response.json(error);
   }
 };
@@ -22,19 +37,24 @@ const selectInventoryByPeriod = async (
   response: Response
 ) => {
   try {
-    const { cnpj, from, to, product_name } = request.body;
+    type DateString = `${number}${number}${number}${number}-${number}${number}`;
+
+    const { cnpj, product_name } = request.body;
+    const { from, to } = request.params;
+
+    if (to.toString().localeCompare(from.toString()) < 0)
+      throw new Error(`Misplaced arguments. You mean from ${to} to ${from}?`);
 
     const inventoryData = await inventoryServices.selectInventoryByPeriod(
       cnpj,
-      from,
-      to,
+      from as DateString,
+      to as DateString,
       product_name
     );
-
     response.status(200).json(inventoryData);
   } catch (error) {
     response.json(error);
   }
 };
 
-export default { selectInventory, selectInventoryByPeriod };
+export default { selectInventory, selectInventoryByPeriod, selectProducts };
