@@ -7,18 +7,21 @@ const whereConstructor = ({
   category,
   period,
   molecule,
-  product_name
+  product_name,
+  cnpj
 }: {
   category?: string;
   period?: string;
   molecule?: string;
   product_name?: string;
+  cnpj?: string;
 }) => {
   const whereQuery = [];
   if (category) whereQuery.push(`category = '${category}'`);
   if (period) whereQuery.push(`month_year = '${period}'`);
   if (molecule) whereQuery.push(`molecule = '${molecule}'`);
   if (product_name) whereQuery.push(`product_name = '${product_name}'`);
+  if (cnpj) whereQuery.push(`cnpj = '${cnpj}'`);
   return whereQuery.join(' AND ');
 };
 

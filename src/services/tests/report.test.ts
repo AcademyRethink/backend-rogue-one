@@ -1,7 +1,7 @@
 import { describe, jest } from '@jest/globals';
-import reportRepository from '../../repositories/reportRepository';
 import reportService from '../reportService';
 
+const cnpj = '00111222000133';
 const limit = '5';
 const orderSort = 'DESC';
 const orderField = 'sale_competitors_month';
@@ -13,6 +13,7 @@ const product_name = 'DIPIRONA SODICA MG GOTAS 500MG 20ML x 1 /ML';
 describe('selectProductsFromService', () => {
   it('should return an array of 5 objects', async () => {
     const result = await reportService.selectProductsFromService({
+      cnpj,
       limit,
       orderSort,
       orderField,
@@ -32,6 +33,7 @@ describe('selectProductsFromService', () => {
   it('should throw an error because product wasnt found', async () => {
     try {
       await reportService.selectProductsFromService({
+        cnpj,
         limit,
         orderSort,
         orderField,
@@ -47,6 +49,7 @@ describe('selectProductsFromService', () => {
 describe('selectLaboratoryByProductFromService', () => {
   it('should return an array with length <= to 5 filtered by molecule', async () => {
     const result = await reportService.selectLaboratoryByProductFromService({
+      cnpj,
       limit,
       category,
       period,
@@ -59,6 +62,7 @@ describe('selectLaboratoryByProductFromService', () => {
 
   it('should return an array with length <= to 5 filtered by product_name', async () => {
     const result = await reportService.selectLaboratoryByProductFromService({
+      cnpj,
       limit,
       category: 'MIP_GENERICO',
       period,
@@ -71,7 +75,8 @@ describe('selectLaboratoryByProductFromService', () => {
 
   it('should return an error because laboratory wasnt found', async () => {
     try {
-      const result = await reportService.selectLaboratoryByProductFromService({
+      await reportService.selectLaboratoryByProductFromService({
+        cnpj,
         limit,
         category: 'MIP_GENERICO',
         period,

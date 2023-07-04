@@ -5,11 +5,16 @@ const selectProductsFromService = async ({
   orderSort = 'DESC',
   orderField = 'sale_competitors_month',
   category = '',
-  period = ''
+  period = '',
+  cnpj = ''
 }) => {
+  if (cnpj === '') {
+    throw new Error('CNPJ é obrigatório');
+  }
   const whereQuery = reportRepository.whereConstructor({
     category,
-    period
+    period,
+    cnpj
   });
   if (!whereQuery) {
     throw new Error('Insira um filtro para realizar a busca');
@@ -40,24 +45,31 @@ const selectLaboratoryByProductFromService = async ({
   category,
   period,
   molecule,
-  product_name
+  product_name,
+  cnpj
 }: {
   limit: string | undefined;
   category: string | undefined;
   period: string | undefined;
   molecule: string | undefined;
   product_name: string | undefined;
+  cnpj: string | undefined;
 }) => {
+  if (!cnpj) {
+    throw new Error('CNPJ é obrigatório');
+  }
   const whereQuery = category?.includes('GENERICO')
     ? reportRepository.whereConstructor({
         period,
-        product_name
+        product_name,
+        cnpj
       })
     : reportRepository.whereConstructor({
         period,
-        molecule
+        molecule,
+        cnpj
       });
-    
+
   const limitAsNumber = parseInt(limit);
 
   const result = await reportRepository.selectLaboratoryByProductFromRepository(
