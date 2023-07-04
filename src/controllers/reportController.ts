@@ -15,7 +15,6 @@ const selectProductsFromController = async (req: Request, res: Response) => {
 
     res.status(200).json(productsList);
   } catch (error: unknown) {
-    console.log(error);
     res.json(error);
   }
 };
