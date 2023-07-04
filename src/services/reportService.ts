@@ -68,7 +68,7 @@ const selectLaboratoryByProductFromService = async ({
   );
 
   if (result.length === 0) {
-    throw new Error('Produto não encontrado');
+    throw new Error('Laboratorio não encontrado');
   }
   return result;
 };

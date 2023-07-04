@@ -109,7 +109,7 @@ describe('selectProductsFromService', () => {
 });
 
 describe('selectLaboratoryByProductFromService', () => {
-  it('should return an array with length <= to 5', async () => {
+  it('should return an array with length <= to 5 filtered by molecule', async () => {
     const result = await reportService.selectLaboratoryByProductFromService({
       limit,
       category,
@@ -119,5 +119,31 @@ describe('selectLaboratoryByProductFromService', () => {
     });
 
     expect(result.length).toBeLessThanOrEqual(5);
+  });
+
+  it('should return an array with length <= to 5 filtered by product_name', async () => {
+    const result = await reportService.selectLaboratoryByProductFromService({
+      limit,
+      category: 'MIP_GENERICO',
+      period,
+      molecule,
+      product_name
+    });
+
+    expect(result.length).toBeLessThanOrEqual(5);
+  });
+
+  it('should return an error because laboratory wasnt found', async () => {
+    try {
+      const result = await reportService.selectLaboratoryByProductFromService({
+        limit,
+        category: 'MIP_GENERICO',
+        period,
+        molecule,
+        product_name: 'test'
+      });
+    } catch (error) {
+      expect(error).toBeDefined();
+    }
   });
 });
