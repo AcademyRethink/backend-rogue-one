@@ -40,7 +40,7 @@ export const selectInventoryByPeriod = async (
   const [endYear, endMonth] = to.split('-').map((s) => Number(s));
 
   // const periodData: { [key: string]: { [key: string]: number } } = {};
-  let periodData: { year: number; month: number; data: number; id: string }[] =
+  const periodData: { year: number; month: number; data: number; id: string }[] =
     [];
 
   for (
