@@ -1,5 +1,5 @@
 import inventoryRepository from '../repositories/inventoryRepository';
-import { InventoryRecord } from '../types/inventory';
+import { InventoryRecord } from '../types/inventoryType';
 
 type DateString = `${number}${number}${number}${number}-${number}${number}`;
 
@@ -40,8 +40,12 @@ export const selectInventoryByPeriod = async (
   const [endYear, endMonth] = to.split('-').map((s) => Number(s));
 
   // const periodData: { [key: string]: { [key: string]: number } } = {};
-  const periodData: { year: number; month: number; data: number; id: string }[] =
-    [];
+  const periodData: {
+    year: number;
+    month: number;
+    data: number;
+    id: string;
+  }[] = [];
 
   for (
     let index = startYear * 12 + startMonth - 1;

@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import * as inventoryServices from '../services/inventoryServices';
+import * as inventoryServices from '../services/inventoryService';
 
 const selectInventory = async (request: Request, response: Response) => {
   try {
@@ -10,7 +10,7 @@ const selectInventory = async (request: Request, response: Response) => {
       limit,
       options
     );
-      
+
     response.status(200).json(inventoryData);
   } catch (error: unknown) {
     response.json(error);

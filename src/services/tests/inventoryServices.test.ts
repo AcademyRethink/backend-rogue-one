@@ -1,6 +1,6 @@
 import { jest, describe } from '@jest/globals';
-import { InventoryRecord } from '../types/inventory';
-import * as inventoryServices from './inventoryServices';
+import { InventoryRecord } from '../../types/inventoryType';
+import * as inventoryServices from '../inventoryService';
 
 describe('selectInventory', () => {
   it('should return a non-empty list for a valid CNPJ, or throw an error otherwise', async () => {
@@ -118,7 +118,7 @@ describe('selectInventoryByPeriod', () => {
     );
 
     console.log(data[0]);
-    
-    expect(data[0]).toMatchObject({year: 2022, month: 12, id: "Inventory"});
+
+    expect(data[0]).toMatchObject({ year: 2022, month: 12, id: 'Inventory' });
   });
 });
