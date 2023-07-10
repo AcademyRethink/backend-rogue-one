@@ -3,10 +3,12 @@ import authRoutes from './routes/authRoute';
 import inventoryRouter from "./routes/inventoryRoutes"
 import { dashboardRoute } from './routes/dashboardRoute';
 import { auth } from './middlewares/auth';
+import cors from "cors";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 const app: Application = express();
+app.use(cors({origin: '*'}))
 
 const port = process.env.PORT || 8080;
 
