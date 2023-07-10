@@ -14,25 +14,30 @@ const updateProductByEan = async(quantity: number, ean: string) => {
   return `O produto ${product[0].product_name} acaba de atingir a quantidade mínima estabelecida`
 };
 
-/* const getNotificationByEan = (ean: string) => {
-  return knexInstance('notifications').where({ ean, resolved_notification: false }).first();
-};
- */
 
 const saveNotification = async (ean: string, message: string) => {
     const createdAt = new Date();
-    await knexInstance('notifications').insert({ ean, message,created_at: createdAt });
+    return knexInstance('notifications').insert({ ean, message,created_at: createdAt }).returning('notification_id');
   };
 
-  /* const resolveNotification = async (notificationId: number) => {
-    await knexInstance('notifications').where({ id: notificationId }).update({ resolved_notification: true });
-  };
-   */
+const getNotification = async (ean: string) => {
+  const notification = await knexInstance('notifications').select('*').where({ean, viewed: false});
+  return notification
+}; 
+
+const updateNotificationViewed = async (notificationId: any) => {
+  try {
+    await knexInstance('notifications').where('notification_id', notificationId).update('viewed', true);
+  } catch (error) {
+    console.error('Erro ao atualizar a coluna "viewed" da notificação:', error);
+    throw error;
+  }
+};
 
 export default {
   getAllProducts,
   saveNotification,
-  updateProductByEan
- /*  getNotificationByEan, */
- /*  resolveNotification */
+  updateProductByEan,
+  getNotification,
+  updateNotificationViewed
 };

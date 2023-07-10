@@ -19,7 +19,7 @@ const io = new Server(httpServer, { cors: { origin: "*" } });
 app.get("/", (request: Request, response: Response) => {
   response.send("working API");
 });
-/* let interval: any; */
+
 io.on('connection', (socket: Socket) => {
  console.log('Cliente conectado:', socket.id);
 
