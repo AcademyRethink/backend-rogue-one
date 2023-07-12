@@ -23,7 +23,7 @@ const saveNotification = async (ean: string, message: string) => {
   const getNotification = async (condition: any) => {
     const { ean, resolved_notification } = condition;
   
-    const query = knexInstance('notifications').select('*').where({ ean });
+    const query = knexInstance('notifications').select('*').where({ ean: Number(ean) });
   
     if (resolved_notification != null) {
       query.andWhere({ resolved_notification: !!resolved_notification });
