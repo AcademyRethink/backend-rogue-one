@@ -17,10 +17,10 @@ const whereConstructor = ({
   cnpj?: string;
 }) => {
   const whereQuery = [];
-  if (category) whereQuery.push(`category = '${category}'`);
-  if (period) whereQuery.push(`month_year = '${period}'`);
-  if (molecule) whereQuery.push(`molecule = '${molecule}'`);
-  if (product_name) whereQuery.push(`product_name = '${product_name}'`);
+  if (category) whereQuery.push(`category ILIKE '%${category}%'`);
+  if (period) whereQuery.push(`month_year = '%${period}%'`);
+  if (molecule) whereQuery.push(`molecule ILIKE '%${molecule}%'`);
+  if (product_name) whereQuery.push(`product_name ILIKE '%${product_name}%'`);
   if (cnpj) whereQuery.push(`cnpj = '${cnpj}'`);
   return whereQuery.join(' AND ');
 };
@@ -57,8 +57,8 @@ const selectLaboratoryByProductFromRepository = async ({
   return await knexInstance('report')
     .select('laboratory', 'molecule', 'product_name', 'sale_competitors_month')
     .whereRaw(whereQuery)
+    .limit(limit)
     .orderBy('sale_competitors_month', 'desc')
-    .limit(limit);
 };
 
 export default {

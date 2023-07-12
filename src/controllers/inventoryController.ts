@@ -32,29 +32,6 @@ const selectProducts = async (request: Request, response: Response) => {
   }
 };
 
-const selectInventoryByPeriod = async (
-  request: Request,
-  response: Response
-) => {
-  try {
-    type DateString = `${number}${number}${number}${number}-${number}${number}`;
 
-    const { cnpj, product_name } = request.body;
-    const { from, to } = request.params;
 
-    if (to.toString().localeCompare(from.toString()) < 0)
-      throw new Error(`Misplaced arguments. You mean from ${to} to ${from}?`);
-
-    const inventoryData = await inventoryServices.selectInventoryByPeriod(
-      cnpj,
-      from as DateString,
-      to as DateString,
-      product_name
-    );
-    response.status(200).json(inventoryData);
-  } catch (error) {
-    response.json(error);
-  }
-};
-
-export default { selectInventory, selectInventoryByPeriod, selectProducts };
+export default { selectInventory, selectProducts };
