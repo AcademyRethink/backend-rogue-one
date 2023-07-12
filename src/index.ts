@@ -5,6 +5,7 @@ import cors from "cors";
 import { createServer } from "http";
 import notificationsService from './services/notificationsService';
 import routes from './routes/inventory'
+import routesNotification from './routes/notificationRoute'
 
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use(routes)
+app.use(routesNotification)
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
@@ -30,7 +32,7 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-const port = 3050;
+const port = 8080;
 httpServer.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

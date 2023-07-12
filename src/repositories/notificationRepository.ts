@@ -4,7 +4,7 @@ import config from '../../knexfile';
 const knexInstance = knex(config)
 
 const getAllProducts = () => {
-  return knexInstance('inventory').select('*');
+  return knexInstance('inventory').select('*').where('date', '2023-03-01' );
 };
 
 const updateProductByEan = async(quantity: number, ean: string) => {
@@ -20,24 +20,52 @@ const saveNotification = async (ean: string, message: string) => {
     return knexInstance('notifications').insert({ ean, message,created_at: createdAt }).returning('notification_id');
   };
 
-const getNotification = async (ean: string) => {
-  const notification = await knexInstance('notifications').select('*').where({ean, viewed: false});
-  return notification
-}; 
+  const getNotification = async (condition: any) => {
+    const { ean, resolved_notification } = condition;
+  
+    const query = knexInstance('notifications').select('*').where({ ean });
+  
+    if (resolved_notification != null) {
+      query.andWhere({ resolved_notification: !!resolved_notification });
+    }
+  
+    const notifications = await query;
+    return notifications;
+  }; 
 
-const updateNotificationViewed = async (notificationId: any) => {
+const updateNotificationViewed = async (notification_id: any) => {
   try {
-    await knexInstance('notifications').where('notification_id', notificationId).update('viewed', true);
+    await knexInstance('notifications').update({ viewed: true }).where({ notification_id })
   } catch (error) {
     console.error('Erro ao atualizar a coluna "viewed" da notificação:', error);
     throw error;
   }
 };
 
+const updateResolvedNotification = async (notification_id: any) => {
+  try {
+    await knexInstance('notifications').update({ resolved_notification: true }).where({ notification_id });
+  } catch (error) {
+    console.error('Erro ao atualizar a coluna "resolved_notification":', error);
+    throw error;
+  }
+}
+
+const getUnresolvedNotifications = async () => {
+  const notifications = await knexInstance('notifications')
+    .select('notification_id', 'message')
+    .where('resolved_notification', false);
+
+  return notifications;
+};
+
+
 export default {
   getAllProducts,
   saveNotification,
   updateProductByEan,
   getNotification,
-  updateNotificationViewed
+  updateNotificationViewed,
+  updateResolvedNotification,
+  getUnresolvedNotifications
 };

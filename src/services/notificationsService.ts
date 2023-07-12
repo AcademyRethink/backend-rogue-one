@@ -4,37 +4,54 @@ import notificationRepository from '../repositories/notificationRepository';
 const checkProductQuantity = async (socket: Socket) => {
   try {
     const products = await notificationRepository.getAllProducts();
-
-    for (const product of products){
-      if (product.quantity <= product.min_quantity) {
-        const notification = await notificationRepository.getNotification(product.ean)
-        console.log(product.ean)
-        console.log(notification)
-        if(!notification.length){
-          const message = ` ${product.product_name}, produto que está entre os mais vendidos no mercado de acordo com a ultima atualização, atingiu a quantidade mínima pré estabelecida em seu estoque`;
-          console.log(message);
-  
-          const notification_id = await notificationRepository.saveNotification(product.ean, message);
-
-          socket.emit('productNotification', { notification_id, message });
-        }
-
+    for (const product of products) {
+      if (isLowQuantityProduct(product)) {
+        await handleLowQuantityProduct(product, socket);
+      } else {
+        await handleNormalQuantityProduct(product);
       }
-    };
+    }
   } catch (error) {
-    console.log(error);
     console.error('Erro ao verificar a quantidade mínima do produto:', error);
   }
 };
-const startProductQuantityCheck = (socket: Socket) => {
-  const checkInterval = 60 * 1000;
 
-  const checkProducts = async () => {
-    await checkProductQuantity(socket);
-    setTimeout(checkProducts, checkInterval);
-  };
+const isLowQuantityProduct = (product:any) => {
+  return product.quantity <= product.min_quantity;
+};
 
-  checkProducts();
+const handleLowQuantityProduct = async (product:any, socket: Socket) => {
+  const notification = await getNotificationForProduct(product);
+  if (!notification) {
+    const message = `${product.product_name}, produto que está entre os mais vendidos no mercado de acordo com a última atualização, atingiu a quantidade mínima pré estabelecida em seu estoque`;
+    const [{ notification_id }] = await saveNotification(product.ean, message);
+    socket.emit('productNotification', { notification_id, message });
+  }
+};
+
+const handleNormalQuantityProduct = async (product: any) => {
+  const notification = await getNotificationForProduct(product);
+  if (notification) {
+    await updateResolvedNotification(notification.notification_id);
+    console.log(`Atualizada a coluna "resolved_notification" para o produto com ean ${product.ean}`);
+  }
+};
+
+const getNotificationForProduct = async (product: any) => {
+  const notification = await notificationRepository.getNotification({
+    ean: product.ean,
+    viewed: false,
+    resolved_notification: false
+  });
+  return notification[0];
+};
+
+const saveNotification = async (ean: any, message: any) => {
+  return notificationRepository.saveNotification(ean, message);
+};
+
+const updateResolvedNotification = async (notificationId: any) => {
+  await notificationRepository.updateResolvedNotification(notificationId);
 };
 
 const updateNotificationViewed = async (notificationId: any) => {
@@ -46,7 +63,30 @@ const updateNotificationViewed = async (notificationId: any) => {
   }
 };
 
+const getUnresolvedNotifications = async () => {
+  try {
+    const notifications = await notificationRepository.getUnresolvedNotifications();
+    return notifications;
+  
+  } catch (error) {
+    throw new Error('Erro ao obter notificações não resolvidas: ' + (error as Error).message);
+  }
+};
+
+//Simulação da checagem do estoque, feita uma vez a cada minuto
+const startProductQuantityCheck = (socket: Socket) => {
+  const checkInterval = 10 * 1000;
+
+  const checkProducts = async () => {
+    await checkProductQuantity(socket);
+    setTimeout(checkProducts, checkInterval);
+  };
+
+  checkProducts();
+};
+
 export default {
   startProductQuantityCheck,
-  updateNotificationViewed
+  updateNotificationViewed,
+  getUnresolvedNotifications
 };
