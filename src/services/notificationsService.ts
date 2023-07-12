@@ -66,7 +66,13 @@ const updateNotificationViewed = async (notificationId: any) => {
 const getUnresolvedNotifications = async () => {
   try {
     const notifications = await notificationRepository.getUnresolvedNotifications();
-    return notifications;
+    const formattedNotifications = notifications.map(notification => {
+      const { notification_id, message } = notification;
+      const endIndex = message.indexOf(', produto');
+      const truncatedMessage = message.substring(0, endIndex);
+      return { notification_id, message: truncatedMessage };
+    });
+    return formattedNotifications;
   
   } catch (error) {
     throw new Error('Erro ao obter notificações não resolvidas: ' + (error as Error).message);
