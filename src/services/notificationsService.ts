@@ -34,7 +34,7 @@ const handleNormalQuantityProduct = async (product: Product) => {
   const notification = await getNotificationForProduct(product);
   if (notification) {
     await updateResolvedNotification(notification.notification_id);
-    console.log(
+     console.log(
       `Atualizada a coluna "resolved_notification" para o produto com ean ${product.ean}`
     );
   }
@@ -46,7 +46,9 @@ const getNotificationForProduct = async (product: Product) => {
     viewed: false,
     resolved_notification: false
   });
+  
   return notification[0];
+ 
 };
 
 const saveNotification = async (ean: string, message: string) => {
@@ -99,5 +101,12 @@ const startProductQuantityCheck = (socket: Socket) => {
 export default {
   startProductQuantityCheck,
   updateNotificationViewed,
-  getUnresolvedNotifications
+  getUnresolvedNotifications,
+  isLowQuantityProduct,
+  saveNotification,
+  handleLowQuantityProduct,
+  handleNormalQuantityProduct,
+  getNotificationForProduct,
+  updateResolvedNotification,
+
 };

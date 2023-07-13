@@ -2,6 +2,7 @@ import type { Knex } from 'knex';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+
 // Update with your config settings.
 
 const config: Knex.Config = {
@@ -16,4 +17,4 @@ const config: Knex.Config = {
   }
 };
 
-export default config
+export default config;
