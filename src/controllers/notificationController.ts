@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import notificationService from '../services/notificationsService';
 
-const updateNotificationViewed = async (req: any, res: any) => {
-    const { id } = req.params;
+const updateNotificationViewed = async (req: Request, res: Response) => {
+  const id: number = parseInt(req.params.id, 10);
   
     try {
       await notificationService.updateNotificationViewed(id);

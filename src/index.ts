@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express";
-
 import { Server, Socket } from "socket.io";
 import cors from "cors";
 import { createServer } from "http";
 import notificationsService from './services/notificationsService';
 import routes from './routes/inventory'
 import routesNotification from './routes/notificationRoute'
-
 
 const app = express();
 app.use(express.json());
@@ -18,9 +16,6 @@ app.use(routesNotification)
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
-app.get("/", (request: Request, response: Response) => {
-  response.send("working API");
-});
 
 io.on('connection', (socket: Socket) => {
  console.log('Cliente conectado:', socket.id);

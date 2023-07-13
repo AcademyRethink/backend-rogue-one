@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import notificationController from '../controllers/notificationController';
 
-const router = express.Router();
+const notifications: Router = Router();
 
-router.patch('/notifications/:id/viewed', notificationController.updateNotificationViewed);
-router.get('/unresolved-notifications', notificationController.getUnresolvedNotifications);
+notifications.patch('/notifications/:id/viewed', notificationController.updateNotificationViewed);
+notifications.get('/unresolved-notifications', notificationController.getUnresolvedNotifications);
 
-export default router;
+export default notifications;
