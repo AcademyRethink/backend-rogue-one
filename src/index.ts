@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import cors from "cors"
 import authRoutes from './routes/authRoute';
 import { router as graphRouter } from './routes/graphRoute';
 import { dashboardRoute } from './routes/dashboardRoute';
@@ -11,9 +12,10 @@ const app: Application = express();
 const port = process.env.PORT || 8080;
 
 app.use(express.json());
-app.use('/auth', authRoutes);
+app.use(cors())
+// app.use('/auth', authRoutes);
 
-app.use(auth);
+// app.use(auth);
 app.use('/dashboard', dashboardRoute);
 
 app.listen(port, () =>

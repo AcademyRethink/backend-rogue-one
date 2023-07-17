@@ -19,12 +19,11 @@ const selectInventory = async (request: Request, response: Response) => {
 
 const selectProducts = async (request: Request, response: Response) => {
   try {
-    const { cnpj, product_name, category } = request.body;
+    const { cnpj, product_name} = request.body;
 
     const data = await inventoryServices.selectProducts(
       cnpj,
       product_name,
-      category
     );
     response.status(200).json(data);
   } catch (error) {

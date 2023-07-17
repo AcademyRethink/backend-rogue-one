@@ -18,7 +18,7 @@ const selectInventoryAndReportByPeriod = async (
       cnpj,
       from as DateString,
       to as DateString,
-      product_name
+      product_name?.toString()
     );
     response.status(200).json(inventoryData);
   } catch (error) {
