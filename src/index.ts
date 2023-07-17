@@ -7,6 +7,8 @@ import cors from "cors";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+
+// Crie uma instância do aplicativo Express
 const app: Application = express();
 app.use(cors({origin: '*'}))
 
@@ -22,4 +24,3 @@ app.use("/dashboard", dashboardRoute);
 app.listen(port, () =>
   console.log(`Server listening on port ${port}. http://localhost:${port}`)
 );
-
