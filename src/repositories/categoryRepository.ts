@@ -3,8 +3,11 @@ import config from '../../knexfile';
 
 const knexInstance = knex(config);
 
-const getCategories = async () => {
-  return await knexInstance('report').select('category').distinct();
+const getCategories = async ({ cnpj }: { cnpj: string }) => {
+  return await knexInstance('report')
+    .select('category')
+    .distinct()
+    .where({ cnpj });
 };
 
 export default { getCategories };

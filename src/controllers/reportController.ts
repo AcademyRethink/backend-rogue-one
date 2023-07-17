@@ -14,7 +14,7 @@ const selectProductsFromController = async (req: Request, res: Response) => {
     });
 
     res.status(200).json(productsList);
-  } catch (error: unknown) {
+  } catch (error) {
     res.json(error);
   }
 };
@@ -36,7 +36,7 @@ const selectLaboratoryByProductFromController = async (
       });
 
     res.status(200).json(laboratoryList);
-  } catch (error: unknown) {
+  } catch (error) {
     res.json(error);
   }
 };
