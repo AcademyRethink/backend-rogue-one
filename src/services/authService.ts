@@ -87,7 +87,7 @@ export async function sendPasswordResetEmail(email: string) {
         pass: String(process.env.PASS) 
       }
     });
-    const urlResetPassword = `https://pharmacy-rogueone.com.br/auth/reset-password?token=${token}`;
+    const urlResetPassword = `http://localhost:5173/reset-password?token=${token}`;
 
     await transporter.sendMail({
       from: String(process.env.USER),

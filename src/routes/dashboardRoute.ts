@@ -5,6 +5,10 @@ import { Router } from 'express';
 
 const dashboardRoute: Router = Router();
 
+dashboardRoute.get('/', (req, res) => {
+  return res.json({ message: 'Hello, this is the dashboard!' });
+});
+
 dashboardRoute.use('/categories', categoriesRoutes);
 
 dashboardRoute.use('/report', reportRouter);

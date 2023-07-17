@@ -17,7 +17,7 @@ app.use('/auth', authRoutes);
 
 app.use(auth);
 app.use("/inventory", inventoryRouter)
-app.use('/dashboard', dashboardRoute);
+app.use("/dashboard", dashboardRoute);
 
 app.listen(port, () =>
   console.log(`Server listening on port ${port}. http://localhost:${port}`)
