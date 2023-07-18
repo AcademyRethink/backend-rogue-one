@@ -1,4 +1,5 @@
 import reportRepository from '../repositories/reportRepository';
+import { makeError } from '../middlewares/errorHandler';
 
 const selectProductsFromService = async ({
   limit = '100',
@@ -9,16 +10,20 @@ const selectProductsFromService = async ({
   cnpj = ''
 }) => {
   if (cnpj === '') {
-    throw new Error('CNPJ é obrigatório');
+    throw makeError({ message: 'CNPJ é obrigatório', status: 400 });
+  }
+
+  if (category === '' || period === '') {
+    throw makeError({
+      message: 'Categoria e período são obrigatórios para realizar a busca',
+      status: 400
+    });
   }
   const whereQuery = reportRepository.whereConstructor({
     category,
     period,
     cnpj
   });
-  if (!whereQuery) {
-    throw new Error('Insira um filtro para realizar a busca');
-  }
 
   const orderQuery = reportRepository.orderConstructor({
     orderField: orderField,
@@ -34,7 +39,7 @@ const selectProductsFromService = async ({
   );
 
   if (productsMap.length === 0) {
-    throw new Error('Produto não encontrado');
+    throw makeError({ message: 'Produto não encontrado', status: 404 });
   }
 
   return productsMap;
@@ -56,7 +61,7 @@ const selectLaboratoryByProductFromService = async ({
   cnpj: string | undefined;
 }) => {
   if (!cnpj) {
-    throw new Error('CNPJ é obrigatório');
+    throw makeError({ message: 'CNPJ é obrigatório', status: 400 });
   }
   const whereQuery = category?.includes('GENERICO')
     ? reportRepository.whereConstructor({
@@ -80,7 +85,7 @@ const selectLaboratoryByProductFromService = async ({
   );
 
   if (result.length === 0) {
-    throw new Error('Laboratorio não encontrado');
+    throw makeError({ message: 'Laboratório não encontrado', status: 404 });
   }
   return result;
 };

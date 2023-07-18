@@ -1,6 +1,7 @@
 import { jest, describe } from '@jest/globals';
 import { InventoryRecord } from '../../types/inventoryType';
 import * as inventoryServices from '../inventoryService';
+import * as graphServices from '../graphServices';
 
 describe('selectInventory', () => {
   it('should return a non-empty list for a valid CNPJ, or throw an error otherwise', async () => {
@@ -111,14 +112,14 @@ describe('selectInventoryByPeriod', () => {
     const from = '2022-12';
     const to = '2023-03';
 
-    const data = await inventoryServices.selectInventoryByPeriod(
+    const data = await graphServices.selectInventoryAndReportByPeriod(
       cnpj,
       from,
       to
     );
 
-    console.log(data[0]);
-
-    expect(data[0]).toMatchObject({ year: 2022, month: 12, id: 'Inventory' });
+    expect(data).toMatchObject({ labels: ["December", "January",  "February", "March"],
+});
+    expect(data.datasets[0]).toHaveProperty("label", "data");
   });
 });
