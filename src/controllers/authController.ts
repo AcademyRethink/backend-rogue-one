@@ -7,8 +7,8 @@ export async function login(req: Request, res: Response): Promise<void> {
   // Lógica de autenticação e geração do token
   try {
     const { email, password } = req.body;
-    const token = await authService.login(email, password);
-    res.json({ token });
+    const session = await authService.login(email, password);
+    res.json(session);
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }

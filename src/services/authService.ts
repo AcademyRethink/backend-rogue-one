@@ -22,7 +22,7 @@ export async function login(email: string, password: string) {
 
     if (isValid) {
       // generate token
-
+      Reflect.deleteProperty(user, 'password')
       const token = jwt.sign(
         { userId: user.cnpj },
         String(process.env.SECRET_KEY),
@@ -30,7 +30,7 @@ export async function login(email: string, password: string) {
           expiresIn: '10h'
         }
       );
-      return token;
+      return {...user ,token};
     } else {
       throw new Error('Senha inválida');
     }
