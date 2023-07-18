@@ -3,8 +3,7 @@ import inventoryController from '../controllers/inventoryController';
 
 const router: Router = Router();
 
-router.get('/', inventoryController.selectInventory);
-router.get('/products', inventoryController.selectProducts);
-router.get('/:from/:to', inventoryController.selectInventoryByPeriod);
+router.post('/', inventoryController.selectInventory);
+router.post('/products', inventoryController.selectProducts);
 
-export default router;
+export { router };

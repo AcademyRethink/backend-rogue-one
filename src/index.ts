@@ -1,9 +1,9 @@
 import express, { Application } from 'express';
+import cors from "cors"
 import authRoutes from './routes/authRoute';
-import inventoryRouter from './routes/inventoryRoutes';
+import { router as graphRouter } from './routes/graphRoute';
 import { dashboardRoute } from './routes/dashboardRoute';
 import { auth } from './middlewares/auth';
-import cors from 'cors';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -14,10 +14,10 @@ app.use(cors({ origin: '*' }));
 const port = process.env.PORT || 8080;
 
 app.use(express.json());
+app.use(cors())
 app.use('/auth', authRoutes);
 
-// app.use(auth);
-app.use('/inventory', inventoryRouter);
+app.use(auth);
 app.use('/dashboard', dashboardRoute);
 
 app.listen(port, () =>
