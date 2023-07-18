@@ -14,7 +14,7 @@ export async function login(email: string, password: string) {
   }
 
   if (!user.has_access) {
-    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento');
+    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento.');
   }
 
   if (user) {
