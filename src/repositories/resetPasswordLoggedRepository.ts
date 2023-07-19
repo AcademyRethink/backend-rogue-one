@@ -19,10 +19,10 @@ async function checkCurrentPassword(email: string, currentPassword: string): Pro
       const user = await db('pharmacy').where('email', email).first();
       
       if (!user) {
-        return false; // O usuário não foi encontrado no banco de dados
+        return false;
       }
   
-      // Verificar se a senha fornecida pelo usuário corresponde à senha criptografada no banco de dados
+      
       const isValidPassword = await bcrypt.compare(currentPassword, user.password);
   
       return isValidPassword;

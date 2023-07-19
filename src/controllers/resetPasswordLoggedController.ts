@@ -10,9 +10,6 @@ async function resetPasswordLogged(req: Request, res: Response) {
       throw new Error('Senha atual e nova senha são obrigatórias');
     }
 
-    // Obter os dados do usuário armazenados no LocalStorage
-
-    // Chamar o serviço para atualizar a senha do usuário
     await resetPasswordLoggedService.resetPasswordLoggedService(email, currentPassword, newPassword);
 
     res.status(200).json({
