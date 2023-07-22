@@ -16,6 +16,10 @@ dashboardRoute.use('/graphs', graphRouter);
 dashboardRoute.use('/categories', categoriesRoutes);
 dashboardRoute.use('/report', reportRouter);
 
+dashboardRoute.use('/',  (req, res) => {
+  return res.json({ ok: true });
+});;
+
 dashboardRoute.post('/home', (req, res) => {
   return res.json({ ok: true });
 });

@@ -32,15 +32,30 @@ const selectProductsFromService = async ({
 
   const limitAsNumber = parseInt(limit);
 
-  const productsMap = await reportRepository.selectProductsFromRepository(
+  const products = await reportRepository.selectProductsFromRepository(
     whereQuery,
     orderQuery,
     limitAsNumber
   );
 
-  if (productsMap.length === 0) {
+  if (products.length === 0) {
     throw makeError({ message: 'Produto não encontrado', status: 404 });
   }
+
+  const productsMap = products.map((el, index) => {
+    if (orderSort.toUpperCase() === 'DESC') {
+      return {
+        position: index + 1,
+        ...el
+      };
+    }
+    if (orderSort.toUpperCase() === 'ASC') {
+      return {
+        position: products.length - index,
+        ...el
+      };
+    }
+  });
 
   return productsMap;
 };
