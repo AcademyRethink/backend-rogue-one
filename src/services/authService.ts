@@ -14,7 +14,7 @@ export async function login(email: string, password: string) {
   }
 
   if (!user.has_access) {
-    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento');
+    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento.');
   }
 
   if (user) {
@@ -22,7 +22,7 @@ export async function login(email: string, password: string) {
 
     if (isValid) {
       // generate token
-
+      Reflect.deleteProperty(user, 'password')
       const token = jwt.sign(
         { userId: user.cnpj },
         String(process.env.SECRET_KEY),
@@ -30,7 +30,7 @@ export async function login(email: string, password: string) {
           expiresIn: '10h'
         }
       );
-      return token;
+      return {...user ,token};
     } else {
       throw new Error('Senha inválida');
     }
@@ -87,7 +87,7 @@ export async function sendPasswordResetEmail(email: string) {
         pass: String(process.env.PASS) 
       }
     });
-    const urlResetPassword = `https://pharmacy-rogueone.com.br/auth/reset-password?token=${token}`;
+    const urlResetPassword = `http://localhost:5173/reset-password?token=${token}`;
 
     await transporter.sendMail({
       from: String(process.env.USER),
