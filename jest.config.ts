@@ -1,5 +1,10 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+export default {
+  clearMocks: true,
+
+  collectCoverage: true,
+
+  coverageDirectory: 'coverage',
   preset: 'ts-jest',
   testEnvironment: 'node'
 };
