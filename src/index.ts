@@ -58,6 +58,7 @@ import express, { Application } from 'express';
 import cors from "cors"
 import authRoutes from './routes/authRoute';
 import { dashboardRoute } from './routes/dashboardRoute';
+import resetPasswordLogged from './routes/resetPasswordLoggedRoute';
 import { auth } from './middlewares/auth';
 import * as dotenv from 'dotenv';
 import { createServer } from 'http'; // Importe createServer do http
@@ -75,12 +76,14 @@ const port = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cors())
+
 app.use('/auth', authRoutes);
 app.use('/', notificationRoute);
 
 
 app.use(auth);
 
+app.use('/', resetPasswordLogged)
 app.use('/dashboard', dashboardRoute);
 
 const httpServer = createServer(app);
