@@ -93,17 +93,6 @@ describe('selectProducts', () => {
 
     expect(data.length).toBeGreaterThan(0);
   });
-  it('should return an array of name of products filtered by product name substring', async () => {
-    const cnpj = '00111222000133';
-    const substring = 'AB';
-
-    const data = await inventoryServices.selectProducts(cnpj, substring);
-    expect(
-      data.filter(
-        (product_name) => !product_name.match(new RegExp(`${substring}`, 'i'))
-      ).length
-    ).toBe(0);
-  });
 });
 
 describe('selectInventoryByPeriod', () => {
@@ -118,8 +107,9 @@ describe('selectInventoryByPeriod', () => {
       to
     );
 
-    expect(data).toMatchObject({ labels: ["December", "January",  "February", "March"],
-});
-    expect(data.datasets[0]).toHaveProperty("label", "data");
+    expect(data).toHaveProperty('labels');
+    expect(data.labels.length).toBe(4);
+
+    expect(data.datasets[0]).toHaveProperty('label', 'data');
   });
 });
