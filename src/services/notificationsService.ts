@@ -73,10 +73,10 @@ const getUnresolvedNotifications = async () => {
     const notifications =
       await notificationRepository.getUnresolvedNotifications();
     const formattedNotifications = notifications.map((notification) => {
-      const { notification_id, message } = notification;
+      const { notification_id, message, viewed } = notification;
       const endIndex = message.indexOf(', produto');
       const truncatedMessage = message.substring(0, endIndex);
-      return { notification_id, message: truncatedMessage };
+      return { notification_id, message: truncatedMessage, viewed };
     });
     return formattedNotifications;
   } catch (error) {

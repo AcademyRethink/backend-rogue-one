@@ -55,7 +55,7 @@ const updateResolvedNotification = async (notification_id: number) => {
 
 const getUnresolvedNotifications = async () => {
   const notifications = await knexInstance('notifications')
-    .select('notification_id', 'message')
+    .select('notification_id', 'message', 'viewed')
     .where('resolved_notification', false);
 
   return notifications;
