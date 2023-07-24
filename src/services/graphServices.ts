@@ -30,9 +30,9 @@ export const selectInventoryAndReportByPeriod = async (
   } = {
     labels: [],
     datasets: [
-      { label: 'Inventory', data: [] },
-      { label: 'Competitors Sales', data: [] },
-      { label: 'Sales', data: [] }
+      { label: 'Estoque', data: [] },
+      { label: 'Venda mercado', data: [] },
+      { label: 'Minhas vendas', data: [] }
     ]
   };
 
@@ -45,9 +45,9 @@ export const selectInventoryAndReportByPeriod = async (
     const month = (index % 12) + 1; // 1-based (January = 1, February = 2)
 
     data.labels.push(
-      new Date(year, month - 1).toLocaleString('en-US', {
+      new Date(year, month - 1).toLocaleString('pt-BR', {
         month: 'long'
-      })
+      }).split("").map((char, index) => !index ? char.toUpperCase() : char).join("")
     );
 
     const inventoryData: InventoryRecord[] = await selectInventory(
