@@ -12,9 +12,12 @@ jest.mock('../../repositories/notificationRepository', () => ({
   updateResolvedNotification: jest.fn(),
   getUnresolvedNotifications: jest.fn(),
 }));
+
+
+
 describe('notificationService', () => {
 
-  describe('isLowQuantityProduct', () => {
+describe('isLowQuantityProduct', () => {
     it('should return true for a low quantity product', () => {
       const mockProduct: Product = {
         id: 1,
@@ -45,7 +48,60 @@ describe('notificationService', () => {
       expect(result).toBe(false);
     });
   });
+  describe('handleNormalQuantityProduct', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
   
+    it('should update resolved_notification for the product when notification exists', async () => {
+   
+      const mockProduct: Product = {
+        id: 1,
+        cnpj: '1234567890',
+        product_name: 'Product A',
+        ean: '9876543210',
+        quantity: 15,
+        min_quantity: 10,
+        category: 'Category A',
+        date: new Date(),
+      };
+      const mockNotification = {
+        notification_id: 1,
+        message: 'Notification message',
+      };
+  
+      jest.spyOn(notificationRepository, 'getNotification').mockResolvedValueOnce([mockNotification]);
+  
+      await notificationService.handleNormalQuantityProduct(mockProduct);
+  
+     
+      expect(notificationRepository.updateResolvedNotification).toHaveBeenCalledWith(mockNotification.notification_id);
+    });
+  
+    it('should not update resolved_notification when no notification exists', async () => {
+      // Mock data
+      const mockProduct: Product = {
+        id: 1,
+        cnpj: '1234567890',
+        product_name: 'Product A',
+        ean: '9876543210',
+        quantity: 15,
+        min_quantity: 10,
+        category: 'Category A',
+        date: new Date(),
+      };
+  
+     
+      jest.spyOn(notificationRepository, 'getNotification').mockResolvedValueOnce([]);
+  
+      
+      await notificationService.handleNormalQuantityProduct(mockProduct);
+  
+    
+      expect(notificationRepository.updateResolvedNotification).not.toHaveBeenCalled();
+    });
+  });
+
   describe('getNotificationForProduct', () => {
     it('should return the first notification for the given product', async () => {
       const mockProduct: Product = {
@@ -116,7 +172,16 @@ describe('notificationService', () => {
     });
   
   });
- 
+  describe('updateResolvedNotification', () => {
+    it('should call notificationRepository.updateResolvedNotification with the correct notification ID', async () => {
+      const mockNotificationId = 1;
+  
+      await notificationService.updateResolvedNotification(mockNotificationId);
+  
+      expect(notificationRepository.updateResolvedNotification).toHaveBeenCalledWith(mockNotificationId);
+    });
+  });
+  
   describe('updateNotificationViewed', () => {
     it('should update the viewed column for the given notification ID', async () => {
       const mockNotificationId = 1;
@@ -128,7 +193,6 @@ describe('notificationService', () => {
     
   });
 
-  
   describe('getUnresolvedNotifications', () => {
     it('should return formatted unresolved notifications', async () => {
       const mockNotifications = [
@@ -156,4 +220,6 @@ describe('notificationService', () => {
       );
     });
   });
+  
 });
+
