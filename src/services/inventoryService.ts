@@ -42,3 +42,4 @@ export const selectProducts = async (cnpj: string) => {
     throw new Error(`Unexpected error. ${error}`);
   }
 };
+

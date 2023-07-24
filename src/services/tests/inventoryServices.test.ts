@@ -113,3 +113,4 @@ describe('selectInventoryByPeriod', () => {
     expect(data.datasets[0]).toHaveProperty('label', 'data');
   });
 });
+

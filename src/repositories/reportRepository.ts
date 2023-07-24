@@ -77,3 +77,4 @@ export default {
   selectLaboratoryByProductFromRepository,
   getLastDate
 };
+
