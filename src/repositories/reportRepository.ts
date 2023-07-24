@@ -69,6 +69,7 @@ const getLastDate = async (cnpj: string) => {
     .orderBy('month_year', 'desc');
 };
 
+
 export default {
   whereConstructor,
   orderConstructor,

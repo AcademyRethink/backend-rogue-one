@@ -1,7 +1,5 @@
 import graphRepositories from '../repositories/graphRepositories';
 
-type DateString = `${number}${number}${number}${number}-${number}${number}`;
-
 /**
  * Return a object containing the data grouped by year and month based on the given period. (Graph 2)
  * @param cnpj User's CNPJ
@@ -13,7 +11,8 @@ type DateString = `${number}${number}${number}${number}-${number}${number}`;
 export const selectInventoryAndReportByPeriod = async (
   cnpj: string,
   product_name?: string,
-  limit?: number
+  limit?: number,
+  completeLabel: boolean = false
 ) => {
   let data: {
     labels: string[];
@@ -54,13 +53,14 @@ export const selectInventoryAndReportByPeriod = async (
       }
     ) => {
       acc.labels.push(
-        dataElement.month_year
-          .toLocaleString('pt-BR', {
-            month: 'long'
-          })
-          .split('')
-          .map((char, index) => (!index ? char.toUpperCase() : char))
-          .join('')
+        (completeLabel ? dataElement.month_year.getFullYear() + ' | ' : '') +
+          dataElement.month_year
+            .toLocaleString('pt-BR', {
+              month: 'long'
+            })
+            .split('')
+            .map((char, index) => (!index ? char.toUpperCase() : char))
+            .join('')
       );
 
       acc.datasets[0].data.push(dataElement.sum_quantity);

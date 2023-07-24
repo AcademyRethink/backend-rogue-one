@@ -8,13 +8,14 @@ const selectInventoryAndReportByPeriod = async (
   try {
     // type DateString = `${number}${number}${number}${number}-${number}${number}`;
 
-    const { cnpj, product_name } = request.body;
+    const { cnpj, product_name, completeLabel } = request.body;
     const { limit } = request.params;
 
     const inventoryData = await graphService.selectInventoryAndReportByPeriod(
       cnpj,
       product_name?.toString(),
-      Number(limit)
+      Number(limit),
+      completeLabel
     );
     response.status(200).json(inventoryData);
   } catch (error) {
