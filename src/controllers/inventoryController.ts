@@ -19,18 +19,13 @@ const selectInventory = async (request: Request, response: Response) => {
 
 const selectProducts = async (request: Request, response: Response) => {
   try {
-    const { cnpj, product_name} = request.body;
+    const { cnpj } = request.body;
 
-    const data = await inventoryServices.selectProducts(
-      cnpj,
-      product_name,
-    );
+    const data = await inventoryServices.selectProducts(cnpj);
     response.status(200).json(data);
   } catch (error) {
     response.json(error);
   }
 };
-
-
 
 export default { selectInventory, selectProducts };
