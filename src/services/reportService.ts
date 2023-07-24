@@ -105,7 +105,15 @@ const selectLaboratoryByProductFromService = async ({
   return result;
 };
 
+const getLastDate = async (cnpj: string) => {
+  if (cnpj === '') {
+    throw makeError({ message: 'CNPJ é obrigatório', status: 400 });
+  }
+  return reportRepository.getLastDate(cnpj);
+};
+
 export default {
   selectProductsFromService,
-  selectLaboratoryByProductFromService
+  selectLaboratoryByProductFromService,
+  getLastDate
 };

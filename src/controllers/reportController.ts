@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
 import reportService from '../services/reportService';
+import { prototype } from 'events';
 
 const selectProductsFromController = async (req: Request, res: Response) => {
   try {
@@ -41,7 +42,19 @@ const selectLaboratoryByProductFromController = async (
   }
 };
 
+
+const getLastDate = async (req: Request, res: Response) => {
+  try {
+    const { cnpj } = req.query;
+    const date = await reportService.getLastDate(cnpj?.toString() ?? '');
+    res.status(200).json(date);
+  } catch (error) {
+    res.json(error);
+  }
+};
+
 export default {
   selectProductsFromController,
-  selectLaboratoryByProductFromController
+  selectLaboratoryByProductFromController,
+  getLastDate
 };
