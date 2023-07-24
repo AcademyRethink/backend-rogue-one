@@ -6,19 +6,15 @@ const selectInventoryAndReportByPeriod = async (
   response: Response
 ) => {
   try {
-    type DateString = `${number}${number}${number}${number}-${number}${number}`;
+    // type DateString = `${number}${number}${number}${number}-${number}${number}`;
 
     const { cnpj, product_name } = request.body;
-    const { from, to } = request.params;
-
-    if (to.toString().localeCompare(from.toString()) < 0)
-      throw new Error(`Misplaced arguments. You mean from ${to} to ${from}?`);
+    const { limit } = request.params;
 
     const inventoryData = await graphService.selectInventoryAndReportByPeriod(
       cnpj,
-      from as DateString,
-      to as DateString,
-      product_name?.toString()
+      product_name?.toString(),
+      Number(limit)
     );
     response.status(200).json(inventoryData);
   } catch (error) {

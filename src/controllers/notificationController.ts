@@ -16,7 +16,7 @@ const updateNotificationViewed = async (req: Request, res: Response) => {
   const getUnresolvedNotifications = async (_req: Request, res: Response) => {
     try {
       const notifications = await notificationService.getUnresolvedNotifications();
-console.log(notifications)
+// console.log(notifications)
       res.json(notifications);
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
