@@ -9,5 +9,6 @@ report.get(
   '/laboratories',
   reportController.selectLaboratoryByProductFromController
 );
+report.get('/lastDate', reportController.getLastDate);
 
 export { report, laboratories };

@@ -1,13 +1,10 @@
-/*
- * For a detailed explanation regarding each configuration property and type check, visit:
- */
-
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   clearMocks: true,
 
   collectCoverage: true,
 
   coverageDirectory: 'coverage',
-
-  preset: 'ts-jest'
+  preset: 'ts-jest',
+  testEnvironment: 'node'
 };

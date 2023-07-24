@@ -3,11 +3,11 @@ import categoryService from '../services/categoryService';
 
 const index = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const categories = await categoryService.getAll();
+    const { cnpj } = req.query;
+    const categories = await categoryService.getAll({cnpj: cnpj?.toString()});
     res.status(200).json(categories);
-    next();
-  } catch (error: any) {
-    throw new Error(error);
+  } catch (error) {
+    res.json(error);
   }
 };
 

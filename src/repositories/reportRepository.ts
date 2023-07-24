@@ -58,12 +58,23 @@ const selectLaboratoryByProductFromRepository = async ({
     .select('laboratory', 'molecule', 'product_name', 'sale_competitors_month')
     .whereRaw(whereQuery)
     .limit(limit)
-    .orderBy('sale_competitors_month', 'desc')
+    .orderBy('sale_competitors_month', 'desc');
 };
+
+const getLastDate = async (cnpj: string) => {
+  return await knexInstance('report')
+    .select('month_year')
+    .limit(1)
+    .where({ cnpj })
+    .orderBy('month_year', 'desc');
+};
+
 
 export default {
   whereConstructor,
   orderConstructor,
   selectProductsFromRepository,
-  selectLaboratoryByProductFromRepository
+  selectLaboratoryByProductFromRepository,
+  getLastDate
 };
+

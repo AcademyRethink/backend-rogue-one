@@ -3,12 +3,13 @@ import bcrypt from 'bcrypt';
 const saltRounds = 10;
 async function generatePassword(
   password: string
-): Promise<string | undefined> {
+): Promise<string> {
   try {
     const passwordHash = await bcrypt.hash(password, saltRounds);
     return passwordHash;
-  } catch (error ) {
+  } catch (error) {
     console.error((error as Error).message);
+    throw new Error('Erro ao gerar a senha criptografada');
   }
 }
 async function validateUser(

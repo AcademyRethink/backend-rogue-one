@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cliente Socket.IO</title>
+</head>
+<body>
+  <script src="./src/index.ts"></script>
+  <script>
+    const socket = io.connect('http://localhost:3050');
+
+    socket.on('connect', () => {
+      console.log('Conectado ao servidor Socket.IO');
+
+   
+      socket.emit('chatMessage', 'Olá, servidor!');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Desconectado do servidor Socket.IO');
+    });
+
+    socket.on('chatMessage', (message) => {
+      console.log('Mensagem recebida:', message);
+    });
+  </script>
+</body>
+</html>

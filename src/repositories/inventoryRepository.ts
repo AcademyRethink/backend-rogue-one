@@ -108,23 +108,22 @@ const selectInventory = async (
  * @param {string} [product_name] - String containg the products name (case insensitive).
  * @returns {string[]}
  */
-const selectProducts = async (
-  cnpj: string,
-  product_name?: string,
-  category?: string
-) => {
+const selectProducts = async (cnpj: string) => {
   if (!validateCNPJ(cnpj)) throw new Error('Invalid CNPJ');
 
   return await knexInstance('inventory')
-    .distinct('product_name')
-    .where({ cnpj })
-    .modify((query) => {
-      query = product_name
-        ? query.whereILike('product_name', `%${product_name}%`)
-        : query;
-      query = category ? query.whereILike('category', `%${category}%`) : query;
+    .where(`inventory.cnpj`, cnpj)
+    .join('report', 'report.product_name', 'inventory.product_name')
+    .select('inventory.product_name')
+    .sum({
+      sum_pharmacy: 'report.sale_pharmacy_month',
+      sum_competitors: 'report.sale_competitors_month'
     })
-    .pluck('product_name');
+    .groupBy('inventory.product_name')
+    .orderBy('sum_pharmacy', 'desc')
+    .orderBy('sum_competitors', 'desc')
+    .pluck('inventory.product_name');
 };
+
 
 export default { selectInventory, selectProducts };

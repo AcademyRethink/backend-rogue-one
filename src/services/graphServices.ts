@@ -1,8 +1,4 @@
-import { InventoryRecord } from '../types/inventoryType';
-import { selectInventory } from './inventoryService';
-import reportRepository from '../repositories/reportRepository';
-
-type DateString = `${number}${number}${number}${number}-${number}${number}`;
+import graphRepositories from '../repositories/graphRepositories';
 
 /**
  * Return a object containing the data grouped by year and month based on the given period. (Graph 2)
@@ -14,14 +10,11 @@ type DateString = `${number}${number}${number}${number}-${number}${number}`;
  */
 export const selectInventoryAndReportByPeriod = async (
   cnpj: string,
-  from: DateString,
-  to: DateString,
-  product_name?: string
+  product_name?: string,
+  limit?: number,
+  completeLabel: boolean = false
 ) => {
-  const [startYear, startMonth] = from.split('-').map((s) => Number(s));
-  const [endYear, endMonth] = to.split('-').map((s) => Number(s));
-
-  const data: {
+  let data: {
     labels: string[];
     datasets: {
       label: string;
@@ -30,67 +23,54 @@ export const selectInventoryAndReportByPeriod = async (
   } = {
     labels: [],
     datasets: [
-      { label: 'Inventory', data: [] },
-      { label: 'Competitors Sales', data: [] },
-      { label: 'Sales', data: [] }
+      { label: 'Estoque', data: [] },
+      { label: 'Venda mercado', data: [] },
+      { label: 'Minhas vendas', data: [] }
     ]
   };
 
-  for (
-    let index = startYear * 12 + startMonth - 1;
-    index < endYear * 12 + endMonth;
-    index++
-  ) {
-    const year = Math.floor(index / 12);
-    const month = (index % 12) + 1; // 1-based (January = 1, February = 2)
+  const rawData = await graphRepositories.selectInventoryAndReportBalance(
+    cnpj,
+    product_name,
+    limit
+  );
 
-    data.labels.push(
-      new Date(year, month - 1).toLocaleString('en-US', {
-        month: 'long'
-      })
-    );
-
-    const inventoryData: InventoryRecord[] = await selectInventory(
-      cnpj,
-      undefined,
-      undefined,
-      {
-        year,
-        month,
-        product_name
+  data = rawData.reduce(
+    (
+      acc: {
+        labels: string[];
+        datasets: [
+          { label: 'Estoque'; data: number[] },
+          { label: 'Venda mercado'; data: number[] },
+          { label: 'Minhas vendas'; data: number[] }
+        ];
+      },
+      dataElement: {
+        month_year: Date;
+        sum_competitors: number;
+        sum_pharmacy: number;
+        sum_quantity: number;
       }
-    );
+    ) => {
+      acc.labels.push(
+        (completeLabel ? dataElement.month_year.getFullYear() + ' | ' : '') +
+          dataElement.month_year
+            .toLocaleString('pt-BR', {
+              month: 'long'
+            })
+            .split('')
+            .map((char, index) => (!index ? char.toUpperCase() : char))
+            .join('')
+      );
 
-    data.datasets[0].data.push(
-      inventoryData.reduce((sum, { quantity }) => (sum += quantity), 0)
-    );
+      acc.datasets[0].data.push(dataElement.sum_quantity);
+      acc.datasets[1].data.push(dataElement.sum_competitors);
+      acc.datasets[2].data.push(dataElement.sum_pharmacy);
 
-    const reportData = await reportRepository.selectProductsFromRepository(
-      reportRepository.whereConstructor({
-        cnpj: cnpj,
-        product_name: product_name
-      }) +
-        ` AND EXTRACT(YEAR FROM month_year) = ${year} AND EXTRACT(MONTH FROM month_year) = ${month}`,
-      reportRepository.orderConstructor({
-        orderField: 'report_id',
-        orderSort: 'ASC'
-      }),
-      Math.pow(10, 5)
-    );
-
-    data.datasets[2].data.push(
-      reportData.reduce(
-        (sum, { sale_pharmacy_month }) => (sum += sale_pharmacy_month),
-        0
-      )
-    );
-    data.datasets[1].data.push(
-      reportData.reduce(
-        (sum, { sale_competitors_month }) => (sum += sale_competitors_month),
-        0
-      )
-    );
-  }
+      return acc;
+    },
+    data
+  );
 
   return data;
 };
