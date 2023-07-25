@@ -1,15 +1,16 @@
 import bcrypt from 'bcrypt';
+import { makeError } from '../middlewares/errorHandler';
 
 const saltRounds = 10;
-async function generatePassword(
-  password: string
-): Promise<string> {
+async function generatePassword(password: string): Promise<string> {
   try {
     const passwordHash = await bcrypt.hash(password, saltRounds);
     return passwordHash;
   } catch (error) {
-    console.error((error as Error).message);
-    throw new Error('Erro ao gerar a senha criptografada');
+    throw makeError({
+      message: 'Erro ao gerar a senha criptografada',
+      status: 500
+    });
   }
 }
 async function validateUser(
@@ -25,5 +26,6 @@ async function validateUser(
 }
 
 export default {
-validateUser, generatePassword
-}
+  validateUser,
+  generatePassword
+};

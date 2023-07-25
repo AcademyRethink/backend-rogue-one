@@ -1,5 +1,6 @@
 import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { makeError } from './errorHandler';
 
 export const SECRET_KEY: Secret = String(process.env.SECRET_KEY);
 
@@ -12,7 +13,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
-      throw new Error();
+      throw makeError({message: 'Por favor, faça login', status: 401});
     }
 
     const decoded = jwt.verify(token, SECRET_KEY);
@@ -20,6 +21,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     next();
   } catch (err) {
-    res.status(401).send('Por favor, faça login');
+    res.send(err);
   }
 };

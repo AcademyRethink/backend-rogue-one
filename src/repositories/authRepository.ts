@@ -1,15 +1,18 @@
 import knex from 'knex';
 import { User } from '../types/authType';
 import config from '../../knexfile';
+import { makeError } from '../middlewares/errorHandler';
 
-const db = knex(config)
+const db = knex(config);
 
-export async function findUserByEmail(email: string): Promise<User | undefined> {
+export async function findUserByEmail(
+  email: string
+): Promise<User | undefined> {
   try {
     const user = await db('pharmacy').where('email', email).first();
     return user;
   } catch (error) {
-    throw new Error('Erro ao buscar email');
+    throw makeError({ message: 'Erro ao buscar email', status: 500 });
   }
 }
 
@@ -27,7 +30,7 @@ export async function createUser(
     });
     return user;
   } catch (error) {
-    throw new Error('Erro ao criar usuário');
+    throw makeError({ message: 'Erro ao criar usuário', status: 500 });
   }
 }
 
@@ -39,7 +42,7 @@ export async function updateUser(email: string, token: string): Promise<void> {
       })
       .where({ email });
   } catch (error) {
-    throw new Error('Erro ao criar usuário');
+    throw makeError({ message: 'Erro ao criar usuário', status: 500 });
   }
 }
 
@@ -55,7 +58,7 @@ export async function updateUserPassword(
       })
       .where({ email });
   } catch (error) {
-    throw new Error('Erro ao atualizar senha');
+    throw makeError({ message: 'Erro ao atualizar senha', status: 500 });
   }
 }
 

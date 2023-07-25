@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import authService from '../services/authService';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { makeError } from '../middlewares/errorHandler';
 
 export async function login(req: Request, res: Response): Promise<void> {
   // Lógica de autenticação e geração do token
@@ -27,12 +28,11 @@ export async function signUp(req: Request, res: Response): Promise<void> {
 
 export async function forgotPassword(req: Request, res: Response) {
   try {
-   
     // Lógica para redefinir a senha do usuário
     const { email } = req.body;
     if (!email) {
       res.status(400).json({ message: 'Email é obrigatório' });
-    return;
+      return;
     }
 
     // Envio do e-mail de redefinição de senha
@@ -55,19 +55,17 @@ export async function resetPassword(req: Request, res: Response) {
     // Lógica para redefinir a senha do usuário
     const { token } = req.query;
     const { password } = req.body;
-     if (!password) {
-      throw new Error('Senha é obrigatória');
-    } 
+    if (!password) {
+      throw makeError({ message: 'Senha é obrigatória', status: 400 });
+    }
     if (token) {
       // Verificando e decodificando o token para obter o email do usuário
       const decoded = jwt.verify(
         `${token}`,
         `${process.env.SECRET_KEY}`
       ) as JwtPayload;
-      
 
       const email = decoded.userId;
-
 
       // Envio do e-mail de redefinição de senha
       await authService.resetPassword(email, password);
@@ -81,7 +79,6 @@ export async function resetPassword(req: Request, res: Response) {
     res.status(400).json({
       message:
         (error as Error).message || 'Ocorreu um erro ao redefinir a senha'
-        
     });
   }
 }
