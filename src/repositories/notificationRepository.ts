@@ -4,8 +4,8 @@ import { NotificationCondition } from '../types/notificationType';
 
 const knexInstance = knex(config);
 
-const getAllProducts = () => {
-  return knexInstance('inventory').select('*').where('date', '2023-03-01');
+const getAllProducts = async () => {
+ return await knexInstance('inventory').select('*').where({'date': '2023-07-01'}).andWhere('id', '<', 8400);
 };
 
 const updateProductByEan = async (quantity: number, ean: string) => {
@@ -19,10 +19,11 @@ const updateProductByEan = async (quantity: number, ean: string) => {
   return `O produto ${product[0].product_name} acaba de atingir a quantidade mínima estabelecida`;
 };
 
-const saveNotification = async (ean: string, message: string) => {
+const saveNotification = async (ean: string, message: string, cnpj:string) => {
   const createdAt = new Date();
-  return knexInstance('notifications')
-    .insert({ ean, message, created_at: createdAt })
+  console.log('saveNotification')
+  return await knexInstance('notifications')
+    .insert({ ean, message, cnpj, created_at: createdAt})
     .returning('notification_id');
 };
 
@@ -33,9 +34,9 @@ const getNotification = async (condition: NotificationCondition) => {
     .select('*')
     .where({ ean: Number(ean) });
 
-  if (resolved_notification != null) {
+  if (resolved_notification != null) 
     query.andWhere({ resolved_notification: !!resolved_notification });
-  }
+  
 
   const notifications = await query;
   return notifications;
@@ -44,13 +45,13 @@ const getNotification = async (condition: NotificationCondition) => {
 const updateNotificationViewed = async (notification_id: number) => {
   await knexInstance('notifications')
     .update({ viewed: true })
-    .where({ notification_id });
+    .where({ notification_id});
 };
 
 const updateResolvedNotification = async (notification_id: number) => {
   await knexInstance('notifications')
     .update({ resolved_notification: true })
-    .where({ notification_id });
+    .where({ notification_id});
 };
 
 const getUnresolvedNotifications = async () => {

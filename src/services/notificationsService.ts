@@ -19,14 +19,17 @@ const checkProductQuantity = async (socket: Socket) => {
 };
 
 const isLowQuantityProduct = (product: Product) => {
-  return product.quantity <= product.min_quantity;
+  const isLow  = product.quantity <= product.min_quantity;
+  return isLow
 };
 
 const handleLowQuantityProduct = async (product: Product, socket: Socket) => {
   const notification = await getNotificationForProduct(product);
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  
   if (!notification) {
     const message = `${product.product_name}, produto que está entre os mais vendidos no mercado de acordo com a última atualização, atingiu a quantidade mínima pré estabelecida em seu estoque`;
-    const [{ notification_id }] = await saveNotification(product.ean, message);
+    const [{ notification_id }] = await saveNotification(product.ean, message, product.cnpj);
     socket.emit('productNotification', { notification_id, message });
   }
 };
@@ -48,8 +51,8 @@ const getNotificationForProduct = async (product: Product) => {
   return notification[0];
 };
 
-const saveNotification = async (ean: string, message: string) => {
-  return notificationRepository.saveNotification(ean, message);
+const saveNotification = async (ean: string, message: string, cnpj: string) => {
+  return notificationRepository.saveNotification(ean, message, cnpj);
 };
 
 const updateResolvedNotification = async (notificationId: number) => {
@@ -86,11 +89,12 @@ const getUnresolvedNotifications = async () => {
   }
 };
 
-//Simulação da checagem do estoque, feita uma vez a cada minuto
+//Simulação da checagem do estoque
 const startProductQuantityCheck = (socket: Socket) => {
   const checkInterval = 10 * 1000;
 
   const checkProducts = async () => {
+
     await checkProductQuantity(socket);
     setTimeout(checkProducts, checkInterval);
   };
