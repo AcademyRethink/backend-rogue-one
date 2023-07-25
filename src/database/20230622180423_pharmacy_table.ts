@@ -7,6 +7,11 @@ export async function up(knex: Knex): Promise<void> {
     table.string('password').notNullable();
     table.string('token').nullable();
     table.boolean('has_access').notNullable().defaultTo(false);
+    table.text('token');
+    table.text('name');
+    table.date('birth_date');
+    table.text('country');
+    table.text('account_type');
   });
 }
 

@@ -13,6 +13,7 @@ export async function up(knex: Knex): Promise<void> {
         table.float("sale_pharmacy_month").notNullable();
         table.float("sale_competitors_month").notNullable();
         table.date("month_year").notNullable();
+        table.float('competitors_unity_price');
       });
     }
 
