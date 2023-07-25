@@ -1,0 +1,10 @@
+runtime: nodejs
+env: flex
+manual_scaling:
+  instances: 1
+
+env_variables:
+  DATABASE_PASSWORD: 'F5!$@wAGp@@6kHf'
+  SECRET_KEY: '$2a$10$6xpfKselpRWwqXz3PEvg7OsEjJXayxNn.tuDt0zj8BOWajqKigEA6'
+  EMAIL_USER: 'pharmacyrogueone@gmail.com'
+  PASS: 'ktcztvfexvvzdybj'

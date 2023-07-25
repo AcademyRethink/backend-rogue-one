@@ -4,7 +4,7 @@
   "description": "��#\u0000 \u0000b\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000-\u0000r\u0000o\u0000g\u0000u\u0000e\u0000-\u0000o\u0000n\u0000e\u0000\r\u0000 \u0000",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "node src/index.js",
     "test": "jest",
     "build": "tsc"
   },
@@ -30,7 +30,6 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
-    "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.3.1",
     "@types/nodemailer": "^6.4.8",

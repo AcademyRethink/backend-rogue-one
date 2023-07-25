@@ -83,14 +83,14 @@ export async function sendPasswordResetEmail(email: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: String(process.env.USER),
+        user: String(process.env.EMAIL_USER),
         pass: String(process.env.PASS) 
       }
     });
     const urlResetPassword = `http://localhost:5173/reset-password?token=${token}`;
 
     await transporter.sendMail({
-      from: String(process.env.USER),
+      from: String(process.env.EMAIL_USER),
       to: email,
       subject: 'Redefinição de Senha',
       html: `<h3>Olá! Clique no link abaixo para redefinir sua senha:<h3><br> <a href=${urlResetPassword}>Recupere a sua senha<a>`
