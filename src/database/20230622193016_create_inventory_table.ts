@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('quantity').checkPositive().notNullable();
     table.integer('min_quantity').checkPositive().notNullable();
     table.string('category').notNullable();
+    table.date('date').notNullable();
   });
 }
 
