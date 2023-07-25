@@ -1,3 +1,4 @@
+import { makeError } from '../middlewares/errorHandler';
 import authRepository from '../repositories/authRepository';
 import passwordHash from '../utils/passwordHash';
 import jwt from 'jsonwebtoken';
@@ -5,16 +6,20 @@ import nodemailer from 'nodemailer';
 
 export async function login(email: string, password: string) {
   if (!email || !password) {
-    throw new Error('Email e senha são obrigatórios');
+    throw makeError({ message: 'Email e senha são obrigatórios', status: 400 });
   }
-  const user = await authRepository.findUserByEmail(email)
+  const user = await authRepository.findUserByEmail(email);
 
   if (!user) {
-    throw new Error('Email inválido');
+    throw makeError({ message: 'Email inválido', status: 400 });
   }
 
   if (!user.has_access) {
-    throw new Error('Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento.');
+    throw makeError({
+      message:
+        'Assinatura suspensa por inadimplência. A plataforma será liberada após o pagamento.',
+      status: 401
+    });
   }
 
   if (user) {
@@ -22,7 +27,7 @@ export async function login(email: string, password: string) {
 
     if (isValid) {
       // generate token
-      Reflect.deleteProperty(user, 'password')
+      Reflect.deleteProperty(user, 'password');
       const token = jwt.sign(
         { userId: user.cnpj },
         String(process.env.SECRET_KEY),
@@ -30,9 +35,9 @@ export async function login(email: string, password: string) {
           expiresIn: '10h'
         }
       );
-      return {...user ,token};
+      return { ...user, token };
     } else {
-      throw new Error('Senha inválida');
+      throw makeError({ message: 'Senha inválida', status: 400 });
     }
   }
 }
@@ -66,7 +71,10 @@ export async function resetPassword(email: string, password: string) {
       return updatedUser;
     }
   } else {
-    throw new Error('Link de redefinição de senha expirado');
+    throw makeError({
+      message: 'Link de redefinição de senha expirado',
+      status: 403
+    });
   }
 }
 
@@ -95,9 +103,11 @@ export async function sendPasswordResetEmail(email: string) {
       subject: 'Redefinição de Senha',
       html: `<h3>Olá! Clique no link abaixo para redefinir sua senha:<h3><br> <a href=${urlResetPassword}>Recupere a sua senha<a>`
     });
-  
   } catch (error) {
-    throw new Error('Erro ao enviar o e-mail de redefinição de senha');
+    throw makeError({
+      message: 'Erro ao enviar o e-mail de redefinição de senha',
+      status: 500
+    });
   }
 }
 

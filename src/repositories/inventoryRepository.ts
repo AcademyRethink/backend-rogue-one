@@ -1,5 +1,6 @@
 import knex from 'knex';
 import config from '../../knexfile';
+import { makeError } from '../middlewares/errorHandler';
 
 const knexInstance = knex(config);
 
@@ -74,7 +75,8 @@ const selectInventory = async (
   limit?: number,
   options?: Partial<Options>
 ) => {
-  if (!validateCNPJ(cnpj)) throw new Error('Invalid CNPJ');
+  if (!validateCNPJ(cnpj))
+    throw makeError({ message: 'Invalid CNPJ', status: 400 });
 
   return await knexInstance('inventory')
     .select('*')
@@ -109,7 +111,8 @@ const selectInventory = async (
  * @returns {string[]}
  */
 const selectProducts = async (cnpj: string) => {
-  if (!validateCNPJ(cnpj)) throw new Error('Invalid CNPJ');
+  if (!validateCNPJ(cnpj))
+    throw makeError({ message: 'Invalid CNPJ', status: 400 });
 
   return await knexInstance('inventory')
     .where(`inventory.cnpj`, cnpj)
@@ -124,6 +127,5 @@ const selectProducts = async (cnpj: string) => {
     .orderBy('sum_competitors', 'desc')
     .pluck('inventory.product_name');
 };
-
 
 export default { selectInventory, selectProducts };

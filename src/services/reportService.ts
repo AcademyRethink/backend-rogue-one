@@ -109,7 +109,8 @@ const getLastDate = async (cnpj: string) => {
   if (cnpj === '') {
     throw makeError({ message: 'CNPJ é obrigatório', status: 400 });
   }
-  return reportRepository.getLastDate(cnpj);
+  const lastDate = await reportRepository.getLastDate(cnpj);
+  return new Date(lastDate[0].month_year);
 };
 
 export default {

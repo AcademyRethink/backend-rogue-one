@@ -1,3 +1,4 @@
+import { makeError } from '../middlewares/errorHandler';
 import inventoryRepository from '../repositories/inventoryRepository';
 import { InventoryRecord } from '../types/inventoryType';
 
@@ -13,7 +14,7 @@ export const selectInventory = async (
   }>
 ) => {
   try {
-    if (cnpj === '') throw new Error('Invalid CNPJ');
+    if (cnpj === '') throw makeError({ message: 'Invalid CNPJ', status: 400 });
 
     return await inventoryRepository.selectInventory(
       cnpj,
@@ -22,8 +23,9 @@ export const selectInventory = async (
       options
     );
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
-    throw new Error(`Unexpected error. ${error}`);
+    if (error instanceof Error)
+      throw makeError({ message: error.message, status: 500 });
+    throw makeError({ message: `Unexpected error. ${error}`, status: 500 });
   }
 };
 /**
@@ -34,12 +36,12 @@ export const selectInventory = async (
  */
 export const selectProducts = async (cnpj: string) => {
   try {
-    if (cnpj === '') throw new Error('Invalid CNPJ');
+    if (cnpj === '') throw makeError({ message: 'Invalid CNPJ', status: 400 });
 
     return await inventoryRepository.selectProducts(cnpj);
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
-    throw new Error(`Unexpected error. ${error}`);
+    if (error instanceof Error)
+      throw makeError({ message: error.message, status: 500 });
+    throw makeError({ message: `Unexpected error. ${error}`, status: 500 });
   }
 };
-

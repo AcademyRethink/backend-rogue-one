@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io';
 import notificationRepository from '../repositories/notificationRepository';
 import { Product } from '../types/notificationType';
+import { makeError } from '../middlewares/errorHandler';
 
 const checkProductQuantity = async (socket: Socket) => {
   try {
@@ -43,9 +44,8 @@ const getNotificationForProduct = async (product: Product) => {
     viewed: false,
     resolved_notification: false
   });
-  
+
   return notification[0];
- 
 };
 
 const saveNotification = async (ean: string, message: string) => {
@@ -77,9 +77,12 @@ const getUnresolvedNotifications = async () => {
     });
     return formattedNotifications;
   } catch (error) {
-    throw new Error(
-      'Erro ao obter notificações não resolvidas: ' + (error as Error).message
-    );
+    throw makeError({
+      message:
+        'Erro ao obter notificações não resolvidas: ' +
+        (error as Error).message,
+      status: 500
+    });
   }
 };
 

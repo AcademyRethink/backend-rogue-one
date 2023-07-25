@@ -1,28 +1,34 @@
-import resetPasswordLoggedRepository  from '../repositories/resetPasswordLoggedRepository';
+import { makeError } from '../middlewares/errorHandler';
+import resetPasswordLoggedRepository from '../repositories/resetPasswordLoggedRepository';
 import passwordHash from '../utils/passwordHash';
 
 async function resetPasswordLoggedService(
-    email: string,
-    currentPassword: string,
-    password: string
-  ) {
-    
-    const user = await resetPasswordLoggedRepository.findUserById(email);
-  
-    if (!user) {
-      throw new Error('Usuário não encontrado');
-    }
-  
-    const isCurrentPasswordCorrect = await resetPasswordLoggedRepository.checkCurrentPassword(email, currentPassword);
-  
-    if (!isCurrentPasswordCorrect) {
-      throw new Error('Senha atual incorreta');
-    }
+  email: string,
+  currentPassword: string,
+  password: string
+) {
+  const user = await resetPasswordLoggedRepository.findUserById(email);
 
-    const hashedNewPassword = await passwordHash.generatePassword(password);
-  
-
-    await resetPasswordLoggedRepository.updateUserPassword(email, hashedNewPassword);
+  if (!user) {
+    throw makeError({ message: 'Usuário não encontrado', status: 500 });
   }
-  
-  export default {resetPasswordLoggedService};
+
+  const isCurrentPasswordCorrect =
+    await resetPasswordLoggedRepository.checkCurrentPassword(
+      email,
+      currentPassword
+    );
+
+  if (!isCurrentPasswordCorrect) {
+    throw makeError({ message: 'Senha atual incorreta', status: 400 });
+  }
+
+  const hashedNewPassword = await passwordHash.generatePassword(password);
+
+  await resetPasswordLoggedRepository.updateUserPassword(
+    email,
+    hashedNewPassword
+  );
+}
+
+export default { resetPasswordLoggedService };
